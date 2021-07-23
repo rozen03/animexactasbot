@@ -34,7 +34,6 @@ def help(update: Update, context: CallbackContext):
 
 
 def estas_vivo(update: Update, context: CallbackContext):
-    update.message.
     msg = update.message.reply_text(
         text="Si, estoy vivo",
         quote=False
