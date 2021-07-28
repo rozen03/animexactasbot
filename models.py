@@ -14,7 +14,7 @@ class Poll(db.Entity):
     periodic_votes = Required(int)
     period = Required(str)
     results = Optional("Results")
-
+    options = Set("Option")
 
 class Option(db.Entity):
     text = Required(str)
@@ -23,6 +23,7 @@ class Option(db.Entity):
     vote_a = Optional("Vote", reverse="option_a")
     vote_b = Optional("Vote", reverse="option_b")
     results = Optional("Results")
+    poll = Required("Poll")
 
 class Vote(db.Entity):
     created_at = Required(datetime.datetime, default=datetime.datetime.utcnow)
@@ -45,9 +46,7 @@ class User(db.Entity):
     last_name = Optional(str)
     username = Optional(str)
     calls = Required(int, default=1)
-    vote = Optional("Vote")
-    # cards = Set(lambda: Card, reverse='users')
-    # suggested_cards = Set(lambda: Card, reverse='suggester')
+    votes = Optional("Vote")
 
 
 def init_db(path):
