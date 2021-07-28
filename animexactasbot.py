@@ -14,6 +14,8 @@ from telegram.ext import (CallbackContext, CallbackQueryHandler, CommandHandler,
 
 # Local imports
 from errors import error_callback
+from handlers.button.button_handler import button_handler
+from handlers.ejemplo.dame_botones import dame_botones
 import models
 
 # Enable logging
@@ -21,7 +23,7 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
 )
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('animexactasbot.log')
 
 
 def start(update: Update, context: CallbackContext) -> int:
@@ -69,6 +71,11 @@ def main():
         iniciar_poll_handler = CommandHandler('iniciarpoll', iniciar_poll)
         dispatcher.add_handler(iniciar_poll_handler)
 
+        damebotones_handler = CommandHandler('damebotones', dame_botones)
+        dispatcher.add_handler(damebotones_handler)
+        
+        dispatcher.add_handler(CallbackQueryHandler(button_handler, run_async=True))
+        
         # Start running the bot
         updater.start_polling()
     except Exception as inst:
@@ -78,5 +85,4 @@ def main():
 
 if __name__ == '__main__':
     from tokenz import *
-
     main()
