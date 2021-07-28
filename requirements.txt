@@ -1,0 +1,5 @@
+pony
+python_telegram_bot
+icalevents
+pytz
+requests
