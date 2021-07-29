@@ -10,7 +10,7 @@ db = Database()
 class Poll(db.Entity):
     text = Required(str)
     created_at = Required(datetime.datetime, default=datetime.datetime.utcnow)
-    delete_at = Required(datetime.datetime,default=datetime.datetime.now() + datetime.timedelta(days=14))
+    delete_at = Optional(datetime.datetime)
     periodic_votes = Required(int)
     period = Required(str)
     results = Optional("Results")
