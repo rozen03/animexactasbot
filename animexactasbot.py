@@ -76,7 +76,7 @@ def main():
         damebotones_handler = CommandHandler('damebotones', dame_botones)
         dispatcher.add_handler(damebotones_handler)
 
-        create_poll_handler = CommandHandler('createPoll', create_poll)
+        create_poll_handler = CommandHandler(['crearpoll','createPoll'], create_poll)
         dispatcher.add_handler(create_poll_handler)
         
         dispatcher.add_handler(CallbackQueryHandler(te_doy_botones, run_async=True, pattern='^' + "dame_botones"))
