@@ -38,3 +38,13 @@ def button_handler(update: Update, context: CallbackContext) -> None:
             query.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup([]))
         except:
             pass
+
+def te_doy_botones(update: Update, context: CallbackContext) -> None:
+    query = update.callback_query
+    callback_arguments = query.data.split("|")
+    coso = callback_arguments[1]
+    query.message.reply_text(f"apretaste algun botón y ahora se que sos un {coso}")
+    try:
+        query.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup([]))
+    except:
+        pass
