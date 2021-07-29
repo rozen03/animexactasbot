@@ -4,22 +4,12 @@ from telegram import (ChatAction, InlineKeyboardButton, InlineKeyboardMarkup,
 from telegram.ext import (CallbackContext, CallbackQueryHandler, CommandHandler,
                           ConversationHandler, Filters, MessageHandler, Updater)
 
-from pony.orm import db_session
-from models import Poll
-from enum import Enum, auto
 
-class Period(Enum):
-    DAILY=auto()
-    WEEKLY=auto()
-    MONTHLY=auto()
-
-
+from usecases.polls.create_poll import *
 
 def create_poll(update: Update, context: CallbackContext):
     if " " in update.message.text:
-        poll_name=(update.message.text).split(" ", 1)[1]
-        with db_session:
-            poll=Poll(text=poll_name,periodic_votes=2,period=Period.WEEKLY.name)
+        poll_name=create_poll_with_name(update.message.text)
         msg = update.message.reply_text(
             text= f"Poll {poll_name} creado",
             quote=False
