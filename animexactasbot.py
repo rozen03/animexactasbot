@@ -16,7 +16,7 @@ from handlers.polls.create_poll import *
 
 # Local imports
 from errors import error_callback
-from handlers.button.button_handler import button_handler
+from handlers.button.button_handler import button_handler,te_doy_botones
 from handlers.ejemplo.dame_botones import dame_botones
 import models
 
@@ -79,8 +79,9 @@ def main():
         create_poll_handler = CommandHandler('createPoll', create_poll)
         dispatcher.add_handler(create_poll_handler)
         
-        dispatcher.add_handler(CallbackQueryHandler(button_handler, run_async=True))
+        dispatcher.add_handler(CallbackQueryHandler(te_doy_botones, run_async=True, pattern='^' + "dame_botones"))
         
+        dispatcher.add_handler(CallbackQueryHandler(button_handler, run_async=True))
         # Start running the bot
         updater.start_polling()
     except Exception as inst:
