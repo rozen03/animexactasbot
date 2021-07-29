@@ -12,6 +12,8 @@ from telegram import (ChatAction, InlineKeyboardButton, InlineKeyboardMarkup,
 from telegram.ext import (CallbackContext, CallbackQueryHandler, CommandHandler,
                           ConversationHandler, Filters, MessageHandler, Updater)
 
+from handlers.polls.create_poll import *
+
 # Local imports
 from errors import error_callback
 from handlers.button.button_handler import button_handler,te_doy_botones
@@ -73,6 +75,9 @@ def main():
 
         damebotones_handler = CommandHandler('damebotones', dame_botones)
         dispatcher.add_handler(damebotones_handler)
+
+        create_poll_handler = CommandHandler('createPoll', create_poll)
+        dispatcher.add_handler(create_poll_handler)
         
         dispatcher.add_handler(CallbackQueryHandler(te_doy_botones, run_async=True, pattern='^' + "dame_botones"))
         
