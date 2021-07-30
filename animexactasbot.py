@@ -18,6 +18,7 @@ from handlers.polls.create_poll import *
 from errors import error_callback
 from handlers.button.button_handler import button_handler,te_doy_botones
 from handlers.ejemplo.dame_botones import dame_botones
+from handlers.ejemplo.votar import votar
 import models
 
 # Enable logging
@@ -78,6 +79,9 @@ def main():
 
         create_poll_handler = CommandHandler(['crearpoll','createPoll'], create_poll)
         dispatcher.add_handler(create_poll_handler)
+
+        votar_handler = CommandHandler('votar', votar)
+        dispatcher.add_handler(votar_handler)
         
         dispatcher.add_handler(CallbackQueryHandler(te_doy_botones, run_async=True, pattern='^' + "dame_botones"))
         
