@@ -23,6 +23,7 @@ class Option(db.Entity):
     vote_a = Optional("Vote", reverse="option_a")
     vote_b = Optional("Vote", reverse="option_b")
     results = Optional("Results")
+    approved = Required(bool, default=False)
     poll = Required("Poll")
 
 class Vote(db.Entity):

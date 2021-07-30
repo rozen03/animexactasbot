@@ -5,6 +5,7 @@
 import logging
 
 from random import seed
+from re import M
 
 import telegram
 from telegram import (ChatAction, InlineKeyboardButton, InlineKeyboardMarkup,
@@ -12,7 +13,15 @@ from telegram import (ChatAction, InlineKeyboardButton, InlineKeyboardMarkup,
 from telegram.ext import (CallbackContext, CallbackQueryHandler, CommandHandler,
                           ConversationHandler, Filters, MessageHandler, Updater)
 
-from handlers.polls.create_poll import *
+from handlers.polls.create_poll import create_poll
+from handlers.polls.sugerir_opcion import (
+    NOMBRE, LINK,
+    nombre,
+    link,
+    cancelar,
+    polls_reply, 
+    sugerir_opcion
+)
 
 # Local imports
 from errors import error_callback
@@ -56,6 +65,7 @@ def main():
         print("Iniciando ANIMEXACTASBOT")
         logger.info("Iniciando")
         models.init_db("animexactasbot.sqlite3")
+        
         updater = Updater(token=token, use_context=True)
         dispatcher = updater.dispatcher
         dispatcher.add_error_handler(error_callback)
@@ -78,7 +88,20 @@ def main():
 
         create_poll_handler = CommandHandler(['crearpoll','createPoll'], create_poll)
         dispatcher.add_handler(create_poll_handler)
+
+        sugerir_opcion_handler = ConversationHandler(
+            entry_points=[CommandHandler('sugeriropcion', sugerir_opcion)],
+            states={
+                NOMBRE: [MessageHandler(Filters.text & ~Filters.command, nombre)],
+                LINK: [MessageHandler(Filters.text & ~Filters.command, link)]
+            },
+            fallbacks=[CommandHandler('cancelar', cancelar)]
+        )
         
+        dispatcher.add_handler(sugerir_opcion_handler)
+
+        dispatcher.add_handler(CallbackQueryHandler(polls_reply, run_async=True, pattern='^' + "polls_reply"))
+
         dispatcher.add_handler(CallbackQueryHandler(te_doy_botones, run_async=True, pattern='^' + "dame_botones"))
         
         dispatcher.add_handler(CallbackQueryHandler(button_handler, run_async=True))
