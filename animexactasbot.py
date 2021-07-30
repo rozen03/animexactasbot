@@ -5,7 +5,6 @@
 import logging
 
 from random import seed
-from re import M
 
 import telegram
 from telegram import (ChatAction, InlineKeyboardButton, InlineKeyboardMarkup,
@@ -97,7 +96,7 @@ def main():
             },
             fallbacks=[CommandHandler('cancelar', cancelar)]
         )
-        
+
         dispatcher.add_handler(sugerir_opcion_handler)
 
         dispatcher.add_handler(CallbackQueryHandler(polls_reply, run_async=True, pattern='^' + "polls_reply"))
