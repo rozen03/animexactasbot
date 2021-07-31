@@ -1,11 +1,12 @@
 import logging
-from pony.orm import *
+
 from telegram import (
     Update,
     InlineKeyboardButton,
     InlineKeyboardMarkup
 )
 from telegram.ext import CallbackContext, ConversationHandler
+
 from usecases.polls.sugerir_opcion import get_polls, store_option
 
 NOMBRE, LINK = range(2)
@@ -27,10 +28,8 @@ def polls_reply(update: Update, context: CallbackContext) -> None:
 
     try:
         query.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup([]))
-    except:
-        pass
-
-    return
+    finally:
+        return
 
 
 def aux_create_option_button(poll):
@@ -38,7 +37,7 @@ def aux_create_option_button(poll):
 
 
 def sugerir_opcion(update: Update, context: CallbackContext):
-    ps = get_polls();
+    ps = get_polls()
     columns = 3
     botones = []
     for k in range(0, len(ps), columns):
@@ -46,8 +45,8 @@ def sugerir_opcion(update: Update, context: CallbackContext):
         botones.append(row)
     reply_markup = InlineKeyboardMarkup(botones)
     update.message.reply_text(
-        "De que poll queres sugerir una opción?\n\n"
-        "Si queres cancelar la operacion, podes escribir el comando /cancelar",
+        "De que poll querés sugerir una opción?\n\n"
+        "Si querés cancelar la operación, podes escribir el comando /cancelar",
         reply_markup=reply_markup
     )
 
