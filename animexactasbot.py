@@ -29,9 +29,9 @@ logger = logging.getLogger('animexactasbot.log')
 
 #Made this way not to use db
 descriptions = {
-        "help":"Da una lista de comandos basicos",
-        "crearpoll":"Permite crear una nueva encuesta",
-        "damebotones":"Da botones y descubre cosas sobre tu persona al usarlos"
+        "help" : "Da una lista de comandos basicos",
+        "crearpoll" : "Permite crear una nueva encuesta",
+        "damebotones" : "Da botones y descubre cosas sobre tu persona al usarlos"
 }
 
 
