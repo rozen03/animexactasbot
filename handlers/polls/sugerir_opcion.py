@@ -32,14 +32,16 @@ def polls_reply(update: Update, context: CallbackContext) -> None:
 
     return
 
+def aux_create_option_button(poll):
+    return InlineKeyboardButton(text=f"{p.text}", callback_data=f"polls_reply|{p.text}|{p.id}")
 
 def sugerir_opcion(update: Update, context: CallbackContext):
     ps = polls();
-    botones = [[
-        InlineKeyboardButton(
-            text=f"{p.text}", callback_data=f"polls_reply|{p.text}|{p.id}"
-        ) for p in ps
-    ]]
+    columns = 3
+    botones = []
+    for k in range(0, len(ps), columns):
+        row = [aux_create_option_button(p) for p in ps[k:k + columns] ] #TODO: make a function out of this
+        botones.append(row)
     reply_markup = InlineKeyboardMarkup(botones)
     update.message.reply_text(
         "De que poll queres sugerir una opción?\n\n"
