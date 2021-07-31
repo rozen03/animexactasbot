@@ -33,7 +33,7 @@ def polls_reply(update: Update, context: CallbackContext) -> None:
     return
 
 def aux_create_option_button(poll):
-    return InlineKeyboardButton(text=f"{p.text}", callback_data=f"polls_reply|{p.text}|{p.id}")
+    return InlineKeyboardButton(text=f"{poll.text}", callback_data=f"polls_reply|{poll.text}|{poll.id}")
 
 def sugerir_opcion(update: Update, context: CallbackContext):
     ps = polls();
