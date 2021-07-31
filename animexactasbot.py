@@ -35,6 +35,13 @@ logging.basicConfig(
 
 logger = logging.getLogger('animexactasbot.log')
 
+#Made this way not to use db
+descriptions = {
+        "help" : "Da una lista de comandos basicos",
+        "crearpoll" : "Permite crear una nueva encuesta",
+        "damebotones" : "Da botones y descubre cosas sobre tu persona al usarlos"
+}
+
 
 def start(update: Update, context: CallbackContext) -> int:
     print(update)
@@ -42,7 +49,10 @@ def start(update: Update, context: CallbackContext) -> int:
 
 
 def help(update: Update, context: CallbackContext):
-    update.message.reply_text("Hola, este es un mensaje de ayuda")
+    message_text = ""
+    for command,description in descriptions.items():
+        message_text +=  f'/{command} - {description}\n'
+    msg = update.message.reply_text(message_text, quote=False)
 
 
 def estas_vivo(update: Update, context: CallbackContext):
