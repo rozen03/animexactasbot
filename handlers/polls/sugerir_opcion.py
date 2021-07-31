@@ -68,7 +68,7 @@ def link(update: Update, context: CallbackContext) -> int:
     update.message.reply_text(
         # "Tu sugerencia fue añadida correctamente y esta pendiente de ser aprobada."
         f"Tu sugerencia fue añadida al poll correctamente y aparecerá entre las opciones a rankear.\n\n"
-        f"Felicidades Charly!"
+        f"Felicitaciones Dante!!"
     )
 
     return ConversationHandler.END
