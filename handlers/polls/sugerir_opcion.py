@@ -6,21 +6,22 @@ from telegram import (
     InlineKeyboardMarkup
 )
 from telegram.ext import CallbackContext, ConversationHandler
-from usecases.polls.sugerir_opcion import polls, storeOption
+from usecases.polls.sugerir_opcion import polls, store_option
 
 NOMBRE, LINK = range(2)
 
 logger = logging.getLogger('animexactasbot.log')
 
+
 def polls_reply(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     callback_args = query.data.split("|")
     
-    poll = callback_args[1]
+    poll_name = callback_args[1]
     context.user_data['poll_id'] = callback_args[2]
     
     query.message.reply_text(
-        f'Elegiste el poll de {poll}.\n\n'
+        f'Elegiste el poll de {poll_name}.\n\n'
         '¿Cuál es el nombre de la sugerencia?'
     )
     
@@ -32,7 +33,6 @@ def polls_reply(update: Update, context: CallbackContext) -> None:
     return
 
 
-@db_session
 def sugerir_opcion(update: Update, context: CallbackContext):
     ps = polls();
     botones = [[
@@ -59,14 +59,16 @@ def nombre(update: Update, context: CallbackContext) -> int:
 
     return LINK
 
-@db_session
+
 def link(update: Update, context: CallbackContext) -> int:
     context.user_data['link'] = update.message.text
 
-    storeOption(context.user_data)
+    store_option(context.user_data)
 
     update.message.reply_text(
-        "Tu sugerencia fue añadida correctamente y esta pendiente de ser aprobada."
+        # "Tu sugerencia fue añadida correctamente y esta pendiente de ser aprobada."
+        f"Tu sugerencia fue añadida al poll correctamente y aparecerá entre las opciones a rankear.\n\n"
+        f"Felicidades Charly!"
     )
 
     return ConversationHandler.END

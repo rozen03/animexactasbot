@@ -2,11 +2,16 @@
 # -*- coding: utf-8 -*-
 
 from pony.orm import *
+from enum import Enum, auto
 import datetime
 
 db = Database()
 
-
+class Period(Enum):
+    DAILY=auto()
+    WEEKLY=auto()
+    MONTHLY=auto()
+    
 class Poll(db.Entity):
     text = Required(str)
     created_at = Required(datetime.datetime, default=datetime.datetime.utcnow)
