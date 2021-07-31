@@ -6,3 +6,7 @@ Para instalar las dependecias correr lo siguiente:
 ```bash
 $ pip3 install -r requirements.txt
 ```
+
+
+El DER esta visible acá:
+https://editor.ponyorm.com/user/rozen/animeenexactasbot/designer
