@@ -4,29 +4,24 @@
 
 import logging
 
-from random import seed
-
-import telegram
-from telegram import (ChatAction, InlineKeyboardButton, InlineKeyboardMarkup,
-                      ReplyKeyboardMarkup, Update, constants)
+from telegram import (Update)
 from telegram.ext import (CallbackContext, CallbackQueryHandler, CommandHandler,
                           ConversationHandler, Filters, MessageHandler, Updater)
 
+import models
+# Local imports
+from errors import error_callback
+from handlers.button.button_handler import button_handler, te_doy_botones
+from handlers.ejemplo.dame_botones import dame_botones
 from handlers.polls.create_poll import create_poll
 from handlers.polls.sugerir_opcion import (
     NOMBRE, LINK,
     nombre,
     link,
     cancelar,
-    polls_reply, 
+    polls_reply,
     sugerir_opcion
 )
-
-# Local imports
-from errors import error_callback
-from handlers.button.button_handler import button_handler,te_doy_botones
-from handlers.ejemplo.dame_botones import dame_botones
-import models
 
 # Enable logging
 logging.basicConfig(
@@ -35,46 +30,37 @@ logging.basicConfig(
 
 logger = logging.getLogger('animexactasbot.log')
 
-#Made this way not to use db
+# Made this way not to use db
 descriptions = {
-        "help" : "Da una lista de comandos basicos",
-        "crearpoll" : "Permite crear una nueva encuesta",
-        "damebotones" : "Da botones y descubre cosas sobre tu persona al usarlos"
+    "help": "Da una lista de comandos básicos",
+    "crearpoll": "Permite crear una nueva encuesta",
+    "damebotones": "Da botones y descubre cosas sobre tu persona al usarlos"
 }
 
 
-def start(update: Update, context: CallbackContext) -> int:
+def start(update: Update, context: CallbackContext) -> None:
     print(update)
     update.message.reply_text("Hola este es un mensaje de inicio, que se yo")
 
 
-def help(update: Update, context: CallbackContext):
+def help_message(update: Update, context: CallbackContext):
     message_text = ""
-    for command,description in descriptions.items():
-        message_text +=  f'/{command} - {description}\n'
-    msg = update.message.reply_text(message_text, quote=False)
+    for command, description in descriptions.items():
+        message_text += f'/{command} - {description}\n'
+    update.message.reply_text(message_text, quote=False)
 
 
 def estas_vivo(update: Update, context: CallbackContext):
-    msg = update.message.reply_text(
-        text="Si, estoy vivo",
-        quote=False
-    )
-
-
-def iniciar_poll(update: Update, context: CallbackContext):
-    with models.db_session:
-        pass
+    update.message.reply_text(text="Si, estoy vivo", quote=False)
 
 
 def main():
     try:
         # Telegram bot Authorization Token
-        botname = "ANIMEXACTASBOT"
         print("Iniciando ANIMEXACTASBOT")
         logger.info("Iniciando")
         models.init_db("animexactasbot.sqlite3")
-        
+
         updater = Updater(token=token, use_context=True)
         dispatcher = updater.dispatcher
         dispatcher.add_error_handler(error_callback)
@@ -86,16 +72,13 @@ def main():
         estasvivo_handler = CommandHandler('estasvivo', estas_vivo, run_async=True)
         dispatcher.add_handler(estasvivo_handler)
 
-        help_handler = CommandHandler('help', help)
+        help_handler = CommandHandler('help', help_message)
         dispatcher.add_handler(help_handler)
-
-        iniciar_poll_handler = CommandHandler('iniciarpoll', iniciar_poll)
-        dispatcher.add_handler(iniciar_poll_handler)
 
         damebotones_handler = CommandHandler('damebotones', dame_botones)
         dispatcher.add_handler(damebotones_handler)
 
-        create_poll_handler = CommandHandler(['crearpoll','createPoll'], create_poll)
+        create_poll_handler = CommandHandler(['crearpoll', 'createPoll'], create_poll)
         dispatcher.add_handler(create_poll_handler)
 
         sugerir_opcion_handler = ConversationHandler(
@@ -112,7 +95,7 @@ def main():
         dispatcher.add_handler(CallbackQueryHandler(polls_reply, run_async=True, pattern='^' + "polls_reply"))
 
         dispatcher.add_handler(CallbackQueryHandler(te_doy_botones, run_async=True, pattern='^' + "dame_botones"))
-        
+
         dispatcher.add_handler(CallbackQueryHandler(button_handler, run_async=True))
         # Start running the bot
         updater.start_polling()
@@ -123,4 +106,5 @@ def main():
 
 if __name__ == '__main__':
     from tokenz import *
+
     main()

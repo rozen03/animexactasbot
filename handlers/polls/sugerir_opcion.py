@@ -6,7 +6,7 @@ from telegram import (
     InlineKeyboardMarkup
 )
 from telegram.ext import CallbackContext, ConversationHandler
-from usecases.polls.sugerir_opcion import polls, store_option
+from usecases.polls.sugerir_opcion import get_polls, store_option
 
 NOMBRE, LINK = range(2)
 
@@ -16,15 +16,15 @@ logger = logging.getLogger('animexactasbot.log')
 def polls_reply(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     callback_args = query.data.split("|")
-    
+
     poll_name = callback_args[1]
     context.user_data['poll_id'] = callback_args[2]
-    
+
     query.message.reply_text(
         f'Elegiste el poll de {poll_name}.\n\n'
         '¿Cuál es el nombre de la sugerencia?'
     )
-    
+
     try:
         query.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup([]))
     except:
@@ -32,15 +32,17 @@ def polls_reply(update: Update, context: CallbackContext) -> None:
 
     return
 
+
 def aux_create_option_button(poll):
     return InlineKeyboardButton(text=f"{poll.text}", callback_data=f"polls_reply|{poll.text}|{poll.id}")
 
+
 def sugerir_opcion(update: Update, context: CallbackContext):
-    ps = polls();
+    ps = get_polls();
     columns = 3
     botones = []
     for k in range(0, len(ps), columns):
-        row = [aux_create_option_button(p) for p in ps[k:k + columns] ] #TODO: make a function out of this
+        row = [aux_create_option_button(p) for p in ps[k:k + columns]]  # TODO: make a function out of this
         botones.append(row)
     reply_markup = InlineKeyboardMarkup(botones)
     update.message.reply_text(

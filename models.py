@@ -7,11 +7,13 @@ import datetime
 
 db = Database()
 
+
 class Period(Enum):
-    DAILY=auto()
-    WEEKLY=auto()
-    MONTHLY=auto()
-    
+    DAILY = auto()
+    WEEKLY = auto()
+    MONTHLY = auto()
+
+
 class Poll(db.Entity):
     text = Required(str)
     created_at = Required(datetime.datetime, default=datetime.datetime.utcnow)
@@ -20,6 +22,7 @@ class Poll(db.Entity):
     period = Required(str)
     results = Optional("Results")
     options = Set("Option")
+
 
 class Option(db.Entity):
     text = Required(str)
@@ -30,6 +33,7 @@ class Option(db.Entity):
     results = Optional("Results")
     approved = Required(bool, default=False)
     poll = Required("Poll")
+
 
 class Vote(db.Entity):
     created_at = Required(datetime.datetime, default=datetime.datetime.utcnow)
