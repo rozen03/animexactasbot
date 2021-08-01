@@ -29,19 +29,23 @@ def polls_reply(update: Update, context: CallbackContext) -> None:
     try:
         query.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup([]))
     finally:
-        return
+        pass
 
 
 def aux_create_option_button(poll):
-    return InlineKeyboardButton(text=f"{poll.text}", callback_data=f"polls_reply|{poll.text}|{poll.id}")
+    return InlineKeyboardButton(
+        text=f"{poll.text}",
+        callback_data=f"polls_reply|{poll.text}|{poll.id}"
+    )
 
 
 def sugerir_opcion(update: Update, context: CallbackContext):
-    ps = get_polls()
+    polls = get_polls()
     columns = 3
     botones = []
-    for k in range(0, len(ps), columns):
-        row = [aux_create_option_button(p) for p in ps[k:k + columns]]  # TODO: make a function out of this
+    for k in range(0, len(polls), columns):
+        # TODO: make a function out of this
+        row = [aux_create_option_button(p) for p in polls[k:k + columns]]
         botones.append(row)
     reply_markup = InlineKeyboardMarkup(botones)
     update.message.reply_text(
@@ -68,10 +72,12 @@ def link(update: Update, context: CallbackContext) -> int:
 
     store_option(context.user_data)
 
+    # noinspection Pylint
     update.message.reply_text(
         # "Tu sugerencia fue añadida correctamente y esta pendiente de ser aprobada."
-        f"Tu sugerencia fue añadida al poll correctamente y aparecerá entre las opciones a rankear.\n\n"
-        f"Felicitaciones Dante!!"
+        """Tu sugerencia fue añadida al poll correctamente y aparecerá entre las opciones a rankear.
+        
+        Felicitaciones Dante!!"""
     )
 
     return ConversationHandler.END

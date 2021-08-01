@@ -8,9 +8,9 @@ from telegram.ext import CallbackContext
 def dame_botones(update: Update, context: CallbackContext):
     botones = [[
         InlineKeyboardButton(
-            text="boton 1", callback_data=f"dame_botones|mandril"),
+            text="boton 1", callback_data="dame_botones|mandril"),
         InlineKeyboardButton(
-            text="boton 2", callback_data=f"dame_botones|milanesa")
+            text="boton 2", callback_data="dame_botones|milanesa")
     ]]
     reply_markup = InlineKeyboardMarkup(botones)
     update.message.reply_text(

@@ -1,5 +1,5 @@
 import logging
-from pony.orm import *
+from pony.orm import *  # pylint: disable=redefined-builtin
 from models import Option, Poll
 
 logger = logging.getLogger('animexactasbot.log')
@@ -18,9 +18,10 @@ def store_option(data):
 
     # En esta primera version, tomaremos como aprobados todas las sugerencias
 
-    # TODO: implementar un comando para aprobar o desechar sugerencias falopa que no formen parte del poll... o pornetas.
+    # TODO: implementar un comando para aprobar o desechar sugerencias
+    #  falopa que no formen parte del poll... o pornetas.
 
-    option = Option(
+    Option(
         poll=poll,
         text=data['nombre_opcion'],
         url=data['link'],

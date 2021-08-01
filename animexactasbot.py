@@ -8,8 +8,8 @@ from telegram import (Update)
 from telegram.ext import (CallbackContext, CallbackQueryHandler, CommandHandler,
                           ConversationHandler, Filters, MessageHandler, Updater)
 
-import models
 # Local imports
+import models
 from errors import error_callback
 from handlers.button.button_handler import button_handler, te_doy_botones
 from handlers.ejemplo.dame_botones import dame_botones
@@ -56,6 +56,7 @@ def estas_vivo(update: Update, context: CallbackContext):
 
 
 def main():
+    # noinspection Pylint
     try:
         # Telegram bot Authorization Token
         print("Iniciando ANIMEXACTASBOT")
@@ -92,13 +93,22 @@ def main():
         )
 
         dispatcher.add_handler(sugerir_opcion_handler)
-
-        dispatcher.add_handler(CallbackQueryHandler(polls_reply, run_async=True, pattern='^' + "polls_reply"))
+        polls_reply_handler = CallbackQueryHandler(
+            polls_reply,
+            run_async=True,
+            pattern='^' + "polls_reply"
+        )
+        dispatcher.add_handler(polls_reply_handler)
 
         votar_handler = CommandHandler('votar', votar)
         dispatcher.add_handler(votar_handler)
-        
-        dispatcher.add_handler(CallbackQueryHandler(te_doy_botones, run_async=True, pattern='^' + "dame_botones"))
+
+        te_doy_botones_handler = CallbackQueryHandler(
+            te_doy_botones,
+            run_async=True,
+            pattern='^' + "dame_botones"
+        )
+        dispatcher.add_handler(te_doy_botones_handler)
 
         dispatcher.add_handler(CallbackQueryHandler(button_handler, run_async=True))
         # Start running the bot
@@ -109,6 +119,7 @@ def main():
 
 
 if __name__ == '__main__':
+    # noinspection Pylint
     from tokenz import *
 
     main()

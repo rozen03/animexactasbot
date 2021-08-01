@@ -14,6 +14,7 @@ def create_poll(update: Update, context: CallbackContext):
         update.message.reply_text(text=f"Poll {poll_name} creado", quote=False)
     else:
         update.message.reply_text(
-            text=f"Por favor, agregar un nombre al poll junto con el comando, ejemplo:\n/createPoll pepe",
+            text="""Por favor, agregar un nombre al poll junto con el comando, ejemplo:
+            /createPoll pepe""",
             quote=False
         )

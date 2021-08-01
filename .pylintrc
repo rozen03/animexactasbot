@@ -1,0 +1,11 @@
+[MASTER]
+init-hook='import sys; sys.path.append(".")'
+disable=
+    C0114, # missing-module-docstring
+    #C0115, # missing-class-docstring
+    C0116, # missing-function-docstring
+    unused-argument,
+    broad-except,
+    wildcard-import,
+    unused-wildcard-import,
+    F0001, # need to remove this ASAP

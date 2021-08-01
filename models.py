@@ -1,20 +1,19 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-
-from pony.orm import *
-from enum import Enum, auto
 import datetime
+from enum import Enum, auto
+
+from pony.orm import *  # pylint: disable=redefined-builtin
 
 db = Database()
 
 
-class Period(Enum):
-    DAILY = auto()
+class Period(Enum):  # pylint: disable=missing-class-docstring
     WEEKLY = auto()
     MONTHLY = auto()
 
 
-class Poll(db.Entity):
+class Poll(db.Entity):  # pylint: disable=missing-class-docstring
     text = Required(str)
     created_at = Required(datetime.datetime, default=datetime.datetime.utcnow)
     delete_at = Optional(datetime.datetime)
@@ -24,7 +23,7 @@ class Poll(db.Entity):
     options = Set("Option")
 
 
-class Option(db.Entity):
+class Option(db.Entity):  # pylint: disable=missing-class-docstring
     text = Required(str)
     url = Required(str)
     created_at = Required(datetime.datetime, default=datetime.datetime.utcnow)
@@ -35,7 +34,7 @@ class Option(db.Entity):
     poll = Required("Poll")
 
 
-class Vote(db.Entity):
+class Vote(db.Entity):  # pylint: disable=missing-class-docstring
     created_at = Required(datetime.datetime, default=datetime.datetime.utcnow)
     option_a = Required("Option")
     option_b = Required("Option")
@@ -43,14 +42,14 @@ class Vote(db.Entity):
     selected = Required(int)
 
 
-class Results(db.Entity):
+class Results(db.Entity):  # pylint: disable=missing-class-docstring
     poll = Required("Poll")
     option = Required("Option")
     order = Required(int)
     score = Optional(float)
 
 
-class User(db.Entity):
+class User(db.Entity):  # pylint: disable=missing-class-docstring
     last_draw = Required(datetime.datetime, default=datetime.datetime.now())
     first_name = Optional(str)
     last_name = Optional(str)
@@ -59,6 +58,7 @@ class User(db.Entity):
     votes = Optional("Vote")
 
 
+# noinspection Pylint
 def init_db(path):
     db.bind('sqlite', path, create_db=True)
     db.generate_mapping(create_tables=True)
