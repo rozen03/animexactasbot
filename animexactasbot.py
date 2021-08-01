@@ -22,6 +22,7 @@ from handlers.polls.sugerir_opcion import (
     polls_reply,
     sugerir_opcion
 )
+from handlers.ejemplo.votar import votar
 
 # Enable logging
 logging.basicConfig(
@@ -94,6 +95,9 @@ def main():
 
         dispatcher.add_handler(CallbackQueryHandler(polls_reply, run_async=True, pattern='^' + "polls_reply"))
 
+        votar_handler = CommandHandler('votar', votar)
+        dispatcher.add_handler(votar_handler)
+        
         dispatcher.add_handler(CallbackQueryHandler(te_doy_botones, run_async=True, pattern='^' + "dame_botones"))
 
         dispatcher.add_handler(CallbackQueryHandler(button_handler, run_async=True))
