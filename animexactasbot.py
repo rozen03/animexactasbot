@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-
-
+import datetime
 import logging
+import random
 
 from telegram import (Update)
 from telegram.ext import (CallbackContext, CallbackQueryHandler, CommandHandler,
@@ -13,6 +13,7 @@ import models
 from errors import error_callback
 from handlers.button.button_handler import button_handler, te_doy_botones
 from handlers.ejemplo.dame_botones import dame_botones
+from handlers.misc.dale_dante import reply_dale_dante
 from handlers.polls.create_poll import create_poll
 from handlers.polls.sugerir_opcion import (
     NOMBRE, LINK,
@@ -61,9 +62,11 @@ def main():
         # Telegram bot Authorization Token
         print("Iniciando ANIMEXACTASBOT")
         logger.info("Iniciando")
+        random.seed(datetime.datetime.now())
+
         models.init_db("animexactasbot.sqlite3")
 
-        updater = Updater(token=token, use_context=True) # pylint: disable=undefined-variable
+        updater = Updater(token=token, use_context=True)  # pylint: disable=undefined-variable
         dispatcher = updater.dispatcher
         dispatcher.add_error_handler(error_callback)
 
@@ -73,6 +76,9 @@ def main():
 
         estasvivo_handler = CommandHandler('estasvivo', estas_vivo, run_async=True)
         dispatcher.add_handler(estasvivo_handler)
+
+        dale_dante_handler = CommandHandler('daledante', reply_dale_dante, run_async=True)
+        dispatcher.add_handler(dale_dante_handler)
 
         help_handler = CommandHandler('help', help_message)
         dispatcher.add_handler(help_handler)

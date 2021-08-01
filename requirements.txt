@@ -2,3 +2,5 @@ pony
 python_telegram_bot
 pytz
 requests
+
+Pillow
