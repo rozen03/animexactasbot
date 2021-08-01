@@ -9,4 +9,6 @@ disable=
     wildcard-import,
     unused-wildcard-import,
     fixme,
+    pointless-string-statement,
+    trailing-whitespace,
     F0001, # need to remove this ASAP
