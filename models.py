@@ -58,7 +58,14 @@ class User(db.Entity):  # pylint: disable=missing-class-docstring
     votes = Optional("Vote")
 
 
-# noinspection Pylint
 def init_db(path):
     db.bind('sqlite', path, create_db=True)
     db.generate_mapping(create_tables=True)
+
+
+def init_clear_db(path):
+    db.bind('sqlite', path, create_db=True)
+    db.generate_mapping(create_tables=True)
+    set_sql_debug(True)
+    db.drop_all_tables(with_all_data=True)
+    db.create_tables()
