@@ -4,7 +4,8 @@
 from telegram import InlineKeyboardMarkup, Update
 from telegram.ext.callbackcontext import CallbackContext
 
-"""
+# noinspection Pylint
+""" 
 This handler main idea es to handle any button pressed by the user.
 Every Button comes with callback_data, let's have a common ground of how to deal with them:
     - Any callback_data from buttons should be strings separated by the character "|"

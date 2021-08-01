@@ -63,7 +63,7 @@ def main():
         logger.info("Iniciando")
         models.init_db("animexactasbot.sqlite3")
 
-        updater = Updater(token=token, use_context=True)
+        updater = Updater(token=token, use_context=True) # pylint: disable=undefined-variable
         dispatcher = updater.dispatcher
         dispatcher.add_error_handler(error_callback)
 
@@ -120,6 +120,6 @@ def main():
 
 if __name__ == '__main__':
     # noinspection Pylint
-    from tokenz import *
+    from tokenz import *  # pylint: disable=import-error
 
     main()

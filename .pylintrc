@@ -8,4 +8,5 @@ disable=
     broad-except,
     wildcard-import,
     unused-wildcard-import,
+    fixme,
     F0001, # need to remove this ASAP

@@ -75,6 +75,7 @@ def link(update: Update, context: CallbackContext) -> int:
     # noinspection Pylint
     update.message.reply_text(
         # "Tu sugerencia fue añadida correctamente y esta pendiente de ser aprobada."
+        # noinspection Pylint
         """Tu sugerencia fue añadida al poll correctamente y aparecerá entre las opciones a rankear.
         
         Felicitaciones Dante!!"""
