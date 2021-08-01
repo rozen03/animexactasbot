@@ -12,3 +12,6 @@ disable=
     pointless-string-statement,
     trailing-whitespace,
     F0001, # need to remove this ASAP
+
+
+# I'm still playing with this file
