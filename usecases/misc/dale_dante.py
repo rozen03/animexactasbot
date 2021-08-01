@@ -37,6 +37,7 @@ def create_dale_dante():
     angle = get_random_text_angle()
     w = txt.rotate(angle, expand=1)
     im.paste(ImageOps.colorize(w, (0, 0, 0), (255, 0, 255)), (242, 60), w)
+    im.paste(ImageOps.colorize(w, (0, 0, 0), (255, 0, 255)), (243, 61), w)
     bio = BytesIO()
     bio.name = 'image.jpeg'
     im.save(bio, 'JPEG')
