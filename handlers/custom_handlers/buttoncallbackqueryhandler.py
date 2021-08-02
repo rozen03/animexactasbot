@@ -6,10 +6,14 @@ from typing import Union
 
 
 class ButtonCallbackQueryHandler(CallbackQueryHandler):
+    """
+    This class has the same behavior of :class:`telegram.ext.CallbackContext`
+    with the added feature that the button callback arguments are split in a list
+    """
     def handle_update(
         self,
         update: UT,
-        dispatcher: 'Dispatcher',
+        dispatcher: Dispatcher,
         check_result: object,
         context: CCT = None,
     ) -> Union[RT, Promise]:
