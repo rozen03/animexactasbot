@@ -11,7 +11,8 @@ from telegram.ext import (CallbackContext, CallbackQueryHandler, CommandHandler,
 # Local imports
 import models
 from errors import error_callback
-from handlers.button.button_handler import button_handler, te_doy_botones, ButtonCallbackQueryHandler
+from handlers.custom_handlers import ButtonCallbackQueryHandler
+from handlers.button.button_handler import button_handler, te_doy_botones
 from handlers.ejemplo.dame_botones import dame_botones
 from handlers.polls.create_poll import create_poll
 from handlers.polls.sugerir_opcion import (
