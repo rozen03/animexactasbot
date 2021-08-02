@@ -1,8 +1,9 @@
-from telegram.ext import CallbackQueryHandler, Dispatcher
+from typing import Union
+
+from telegram.ext import CallbackQueryHandler, Dispatcher  # pylint: disable=unused-import
 from telegram.ext.handler import UT, RT
 from telegram.ext.utils.types import CCT
 from telegram.ext.utils.promise import Promise
-from typing import Union
 
 
 class ButtonCallbackQueryHandler(CallbackQueryHandler):
@@ -10,12 +11,13 @@ class ButtonCallbackQueryHandler(CallbackQueryHandler):
     This class has the same behavior of :class:`telegram.ext.CallbackContext`
     with the added feature that the button callback arguments are split in a list
     """
+
     def handle_update(
-        self,
-        update: UT,
-        dispatcher: Dispatcher,
-        check_result: object,
-        context: CCT = None,
+            self,
+            update: UT,
+            dispatcher: 'Dispatcher',
+            check_result: object,
+            context: CCT = None,
     ) -> Union[RT, Promise]:
         query = update.callback_query
         callback_arguments = query.data.split("|")
