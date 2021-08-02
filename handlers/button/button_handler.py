@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+
 from telegram import InlineKeyboardMarkup, Update
 from telegram.ext.callbackcontext import CallbackContext
 
@@ -42,8 +43,7 @@ def button_handler(update: Update, context: CallbackContext) -> None:
 
 def te_doy_botones(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
-    callback_arguments = query.data.split("|")
-    coso = callback_arguments[1]
+    coso = context.user_data["button_reply_1"]
     query.message.reply_text(f"apretaste algún botón y ahora se que sos un {coso}")
     try:
         query.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup([]))
