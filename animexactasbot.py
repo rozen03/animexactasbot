@@ -11,6 +11,7 @@ from telegram.ext import (CallbackContext, CallbackQueryHandler, CommandHandler,
 # Local imports
 import models
 from errors import error_callback
+from handlers.custom_handlers.buttoncallbackqueryhandler import ButtonCallbackQueryHandler
 from handlers.button.button_handler import button_handler, te_doy_botones
 from handlers.ejemplo.dame_botones import dame_botones
 from handlers.misc.dale_dante import reply_dale_dante
@@ -109,7 +110,7 @@ def main():
         votar_handler = CommandHandler('votar', votar)
         dispatcher.add_handler(votar_handler)
 
-        te_doy_botones_handler = CallbackQueryHandler(
+        te_doy_botones_handler = ButtonCallbackQueryHandler(
             te_doy_botones,
             run_async=True,
             pattern='^' + "dame_botones"
