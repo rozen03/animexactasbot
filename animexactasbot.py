@@ -5,6 +5,7 @@
 import logging
 
 from telegram import (Update)
+from telegram.botcommand import BotCommand
 from telegram.ext import (CallbackContext, CallbackQueryHandler, CommandHandler,
                           ConversationHandler, Filters, MessageHandler, Updater)
 
@@ -55,6 +56,8 @@ def help_message(update: Update, context: CallbackContext):
 def estas_vivo(update: Update, context: CallbackContext):
     update.message.reply_text(text="Si, estoy vivo", quote=False)
 
+def get_command_list():
+    return [BotCommand(command,description) for command, description in descriptions.items()]
 
 def main():
     # noinspection Pylint
@@ -112,6 +115,7 @@ def main():
         dispatcher.add_handler(te_doy_botones_handler)
 
         dispatcher.add_handler(CallbackQueryHandler(button_handler, run_async=True))
+        dispatcher.bot.set_my_commands(get_command_list())
         # Start running the bot
         updater.start_polling()
     except Exception as inst:
