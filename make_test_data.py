@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-from models import *
+from models import Poll, Option, User, Vote, db_session, init_clear_db, Period, commit
 
 init_clear_db("animexactasbot.sqlite3")
 

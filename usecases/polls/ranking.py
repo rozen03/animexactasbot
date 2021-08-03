@@ -13,11 +13,11 @@ logger = logging.getLogger('animexactasbot.log')
 def rank_poll(poll_id):
     votes = select(v for v in Vote if v.poll.id == poll_id)[:]
     scores = {o.id: 0 for o in select(o for o in Option if o.poll.id == poll_id)}
-    for v in votes:
-        if v.selected == 0:
-            scores[v.option_a.id] += 1
+    for vote in votes:
+        if vote.selected == 0:
+            scores[vote.option_a.id] += 1
         else:
-            scores[v.option_b.id] += 1
+            scores[vote.option_b.id] += 1
     delete(r for r in Result if r.poll.id == poll_id)
     for option_id, score in scores.items():
         Result(poll=1, option=option_id, score=score)
