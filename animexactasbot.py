@@ -56,8 +56,10 @@ def help_message(update: Update, context: CallbackContext):
 def estas_vivo(update: Update, context: CallbackContext):
     update.message.reply_text(text="Si, estoy vivo", quote=False)
 
+
 def get_command_list():
-    return [BotCommand(command,description) for command, description in descriptions.items()]
+    return [BotCommand(command, description) for command, description in descriptions.items()]
+
 
 def main():
     # noinspection Pylint
@@ -67,7 +69,7 @@ def main():
         logger.info("Iniciando")
         models.init_db("animexactasbot.sqlite3")
 
-        updater = Updater(token=token, use_context=True) # pylint: disable=undefined-variable
+        updater = Updater(token=token, use_context=True)  # pylint: disable=undefined-variable
         dispatcher = updater.dispatcher
         dispatcher.add_error_handler(error_callback)
 
