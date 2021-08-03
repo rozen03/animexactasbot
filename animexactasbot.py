@@ -11,10 +11,12 @@ from telegram.ext import (CallbackContext, CallbackQueryHandler, CommandHandler,
 
 # Local imports
 import models
+from config import config
 from errors import error_callback
 from handlers.custom_handlers.buttoncallbackqueryhandler import ButtonCallbackQueryHandler
 from handlers.button.button_handler import button_handler, te_doy_botones
 from handlers.ejemplo.dame_botones import dame_botones
+from handlers.ejemplo.votar import votar
 from handlers.polls.create_poll import create_poll
 from handlers.polls.sugerir_opcion import (
     NOMBRE, LINK,
@@ -24,7 +26,6 @@ from handlers.polls.sugerir_opcion import (
     polls_reply,
     sugerir_opcion
 )
-from handlers.ejemplo.votar import votar
 
 # Enable logging
 logging.basicConfig(
@@ -56,8 +57,10 @@ def help_message(update: Update, context: CallbackContext):
 def estas_vivo(update: Update, context: CallbackContext):
     update.message.reply_text(text="Si, estoy vivo", quote=False)
 
+
 def get_command_list():
-    return [BotCommand(command,description) for command, description in descriptions.items()]
+    return [BotCommand(command, description) for command, description in descriptions.items()]
+
 
 def main():
     # noinspection Pylint
@@ -67,7 +70,7 @@ def main():
         logger.info("Iniciando")
         models.init_db("animexactasbot.sqlite3")
 
-        updater = Updater(token=token, use_context=True) # pylint: disable=undefined-variable
+        updater = Updater(token=config["TOKEN"], use_context=True)
         dispatcher = updater.dispatcher
         dispatcher.add_error_handler(error_callback)
 
@@ -125,6 +128,5 @@ def main():
 
 if __name__ == '__main__':
     # noinspection Pylint
-    from tokenz import *  # pylint: disable=import-error
 
     main()
