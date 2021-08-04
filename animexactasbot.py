@@ -13,10 +13,12 @@ from telegram.ext import (CallbackContext, CallbackQueryHandler, CommandHandler,
 
 # Local imports
 import models
+from config import config
 from errors import error_callback
 from handlers.custom_handlers.buttoncallbackqueryhandler import ButtonCallbackQueryHandler
 from handlers.button.button_handler import button_handler, te_doy_botones
 from handlers.ejemplo.dame_botones import dame_botones
+from handlers.ejemplo.votar import votar
 from handlers.polls.create_poll import create_poll
 from handlers.polls.ranking import command_rank_polls, job_rank_polls
 from handlers.polls.sugerir_opcion import (
@@ -27,7 +29,6 @@ from handlers.polls.sugerir_opcion import (
     polls_reply,
     sugerir_opcion
 )
-from handlers.ejemplo.votar import votar
 
 # Enable logging
 logging.basicConfig(
@@ -71,7 +72,9 @@ def main():
         print("Iniciando ANIMEXACTASBOT")
         logger.info("Iniciando")
         models.init_db("animexactasbot.sqlite3")
-        updater = Updater(token=token, use_context=True)  # pylint: disable=undefined-variable
+        
+        updater = Updater(token=config["TOKEN"], use_context=True)
+
         dispatcher = updater.dispatcher
         dispatcher.add_error_handler(error_callback)
 
@@ -120,6 +123,7 @@ def main():
 
         dispatcher.add_handler(CallbackQueryHandler(button_handler, run_async=True))
 
+
         updater.job_queue.run_daily(callback=job_rank_polls, time=datetime.time())
 
         manual_rank_polls = CommandHandler('rankeameloh', command_rank_polls, run_async=True)
@@ -134,7 +138,4 @@ def main():
 
 
 if __name__ == '__main__':
-    # noinspection Pylint
-    from tokenz import *  # pylint: disable=import-error
-
     main()
