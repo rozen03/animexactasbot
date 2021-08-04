@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 
+import datetime
+
 import logging
 
 from telegram import (Update)
@@ -18,6 +20,7 @@ from handlers.button.button_handler import button_handler, te_doy_botones
 from handlers.ejemplo.dame_botones import dame_botones
 from handlers.ejemplo.votar import votar
 from handlers.polls.create_poll import create_poll
+from handlers.polls.ranking import command_rank_polls, job_rank_polls
 from handlers.polls.sugerir_opcion import (
     NOMBRE, LINK,
     nombre,
@@ -69,8 +72,9 @@ def main():
         print("Iniciando ANIMEXACTASBOT")
         logger.info("Iniciando")
         models.init_db("animexactasbot.sqlite3")
-
+        
         updater = Updater(token=config["TOKEN"], use_context=True)
+
         dispatcher = updater.dispatcher
         dispatcher.add_error_handler(error_callback)
 
@@ -118,6 +122,13 @@ def main():
         dispatcher.add_handler(te_doy_botones_handler)
 
         dispatcher.add_handler(CallbackQueryHandler(button_handler, run_async=True))
+
+
+        updater.job_queue.run_daily(callback=job_rank_polls, time=datetime.time())
+
+        manual_rank_polls = CommandHandler('rankeameloh', command_rank_polls, run_async=True)
+        dispatcher.add_handler(manual_rank_polls)
+
         dispatcher.bot.set_my_commands(get_command_list())
         # Start running the bot
         updater.start_polling()

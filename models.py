@@ -19,17 +19,18 @@ class Poll(db.Entity):  # pylint: disable=missing-class-docstring
     delete_at = Optional(datetime.datetime)
     periodic_votes = Required(int)
     period = Required(str)
-    results = Optional("Results")
+    results = Set("Result")
     options = Set("Option")
+    votes = Set("Vote")
 
 
 class Option(db.Entity):  # pylint: disable=missing-class-docstring
     text = Required(str)
     url = Required(str)
     created_at = Required(datetime.datetime, default=datetime.datetime.utcnow)
-    vote_a = Optional("Vote", reverse="option_a")
-    vote_b = Optional("Vote", reverse="option_b")
-    results = Optional("Results")
+    vote_a = Set("Vote", reverse="option_a")
+    vote_b = Set("Vote", reverse="option_b")
+    results = Optional("Result")
     approved = Required(bool, default=False)
     poll = Required("Poll")
 
@@ -39,23 +40,22 @@ class Vote(db.Entity):  # pylint: disable=missing-class-docstring
     option_a = Required("Option")
     option_b = Required("Option")
     user = Required("User")
+    poll = Required("Poll")
     selected = Required(int)
 
 
-class Results(db.Entity):  # pylint: disable=missing-class-docstring
+class Result(db.Entity):  # pylint: disable=missing-class-docstring
     poll = Required("Poll")
     option = Required("Option")
-    order = Required(int)
     score = Optional(float)
 
 
 class User(db.Entity):  # pylint: disable=missing-class-docstring
-    last_draw = Required(datetime.datetime, default=datetime.datetime.now())
     first_name = Optional(str)
     last_name = Optional(str)
     username = Optional(str)
     calls = Required(int, default=1)
-    votes = Optional("Vote")
+    votes = Set("Vote")
 
 
 def init_db(path):
