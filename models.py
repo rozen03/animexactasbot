@@ -62,6 +62,7 @@ def init_db(path):
     db.bind('sqlite', path, create_db=True)
     db.generate_mapping(create_tables=True)
 
+
 def init_clear_db(path):
     db.bind('sqlite', path, create_db=True)
     db.generate_mapping(create_tables=True)
