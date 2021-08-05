@@ -53,7 +53,7 @@ def sugerir_opcion(update: Update, context: CallbackContext):
         "Si querés cancelar la operación, podes escribir el comando /cancelar",
         reply_markup=reply_markup
     )
-
+    # hola esto es un mensaje para molestar a facu (robi)
     return NOMBRE
 
 
