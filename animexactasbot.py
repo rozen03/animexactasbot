@@ -2,18 +2,25 @@
 # -*- coding: utf-8 -*-
 
 
+import datetime
+
 import logging
 
 from telegram import (Update)
+from telegram.botcommand import BotCommand
 from telegram.ext import (CallbackContext, CallbackQueryHandler, CommandHandler,
                           ConversationHandler, Filters, MessageHandler, Updater)
 
 # Local imports
 import models
+from config import config
 from errors import error_callback
+from handlers.custom_handlers.buttoncallbackqueryhandler import ButtonCallbackQueryHandler
 from handlers.button.button_handler import button_handler, te_doy_botones
 from handlers.ejemplo.dame_botones import dame_botones
+from handlers.ejemplo.votar import votar
 from handlers.polls.create_poll import create_poll
+from handlers.polls.ranking import command_rank_polls, job_rank_polls
 from handlers.polls.sugerir_opcion import (
     NOMBRE, LINK,
     nombre,
@@ -22,7 +29,6 @@ from handlers.polls.sugerir_opcion import (
     polls_reply,
     sugerir_opcion
 )
-from handlers.ejemplo.votar import votar
 
 # Enable logging
 logging.basicConfig(
@@ -55,6 +61,10 @@ def estas_vivo(update: Update, context: CallbackContext):
     update.message.reply_text(text="Si, estoy vivo", quote=False)
 
 
+def get_command_list():
+    return [BotCommand(command, description) for command, description in descriptions.items()]
+
+
 def main():
     # noinspection Pylint
     try:
@@ -62,8 +72,9 @@ def main():
         print("Iniciando ANIMEXACTASBOT")
         logger.info("Iniciando")
         models.init_db("animexactasbot.sqlite3")
+        
+        updater = Updater(token=config["TOKEN"], use_context=True)
 
-        updater = Updater(token=token, use_context=True) # pylint: disable=undefined-variable
         dispatcher = updater.dispatcher
         dispatcher.add_error_handler(error_callback)
 
@@ -103,7 +114,7 @@ def main():
         votar_handler = CommandHandler('votar', votar)
         dispatcher.add_handler(votar_handler)
 
-        te_doy_botones_handler = CallbackQueryHandler(
+        te_doy_botones_handler = ButtonCallbackQueryHandler(
             te_doy_botones,
             run_async=True,
             pattern='^' + "dame_botones"
@@ -111,6 +122,14 @@ def main():
         dispatcher.add_handler(te_doy_botones_handler)
 
         dispatcher.add_handler(CallbackQueryHandler(button_handler, run_async=True))
+
+
+        updater.job_queue.run_daily(callback=job_rank_polls, time=datetime.time())
+
+        manual_rank_polls = CommandHandler('rankeameloh', command_rank_polls, run_async=True)
+        dispatcher.add_handler(manual_rank_polls)
+
+        dispatcher.bot.set_my_commands(get_command_list())
         # Start running the bot
         updater.start_polling()
     except Exception as inst:
@@ -119,7 +138,4 @@ def main():
 
 
 if __name__ == '__main__':
-    # noinspection Pylint
-    from tokenz import *  # pylint: disable=import-error
-
     main()
