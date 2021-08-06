@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 import random
+import telegram
 
 from telegram import (
     Update,
@@ -42,8 +43,12 @@ def votar_opciones(update: Update, context: CallbackContext) -> None:
 
         query.message.reply_text(
             f'Has elegido la encuesta de {poll_name}.\n\n'
-            '¿Cuál de las siguientes opciones es la mejor?',
-            reply_markup=InlineKeyboardMarkup([choices_buttons])
+            '¿Cuál de las siguientes opciones es la mejor?\n'
+            f'[{choices[0].text}]({choices[0].url})\n'
+            f'[{choices[1].text}]({choices[1].url})',
+            reply_markup=InlineKeyboardMarkup([choices_buttons]),
+            disable_web_page_preview=True,
+            parse_mode=telegram.ParseMode.MARKDOWN
         )
 
         try:

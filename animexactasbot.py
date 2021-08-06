@@ -39,7 +39,7 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
 )
 
-logger = logging.getLogger('animeexactasbot.log')
+logger = logging.getLogger('animexactasbot.log')
 
 # Made this way not to use db
 descriptions = {
@@ -75,7 +75,7 @@ def main():
         # Telegram bot Authorization Token
         print("Iniciando ANIMEXACTASBOT")
         logger.info("Iniciando")
-        models.init_db("animeexactasbot.sqlite3")
+        models.init_db("animexactasbot.sqlite3")
         
         updater = Updater(token=config["TOKEN"], use_context=True)
 
