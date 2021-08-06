@@ -6,8 +6,8 @@ logger = logging.getLogger('animexactasbot.log')
 
 
 @db_session
-def get_options_from_poll(poll_name):
-    poll_options = select(o for o in Option if o.poll.text == poll_name)[:]
+def get_options_from_poll(poll_id):
+    poll_options = select(o for o in Option if o.poll.id == poll_id)[:]
     return poll_options
 
 @db_session

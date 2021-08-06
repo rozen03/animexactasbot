@@ -10,8 +10,8 @@ from telegram import (
 )
 from telegram.ext import CallbackContext
 
-from handlers.polls.sugerir_opcion import obtener_botonera_polls
 from usecases.polls.votar import get_options_from_poll, create_vote
+from handlers.utils.utils import obtener_botonera_polls
 
 def votar(update: Update, context: CallbackContext):
     reply_markup = obtener_botonera_polls("votar_opciones")
@@ -26,7 +26,7 @@ def votar_opciones(update: Update, context: CallbackContext) -> None:
     poll_name = callback_args[1]
     context.user_data['poll_id'] = callback_args[2]
 
-    options = get_options_from_poll(poll_name)
+    options = get_options_from_poll(callback_args[2])
     choices = random.sample(list(options), 2)
     
     if len(choices) == 2:

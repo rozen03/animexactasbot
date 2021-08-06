@@ -118,14 +118,14 @@ def main():
         votar_handler = CommandHandler('votar', votar)
         dispatcher.add_handler(votar_handler)
 
-        votar_opciones_handler = CallbackQueryHandler(
+        votar_opciones_handler = ButtonCallbackQueryHandler(
             votar_opciones,
             run_async=True,
             pattern='^' + "votar_opciones"
         )
         dispatcher.add_handler(votar_opciones_handler)
 
-        opcion_votada_handler = CallbackQueryHandler(
+        opcion_votada_handler = ButtonCallbackQueryHandler(
             opcion_votada,
             run_async=True,
             pattern='^' + "opcion_votada"

@@ -8,6 +8,7 @@ from telegram import (
 from telegram.ext import CallbackContext, ConversationHandler
 
 from usecases.polls.sugerir_opcion import get_polls, store_option
+from handlers.utils.utils import obtener_botonera_polls
 
 NOMBRE, LINK = range(2)
 
@@ -31,14 +32,6 @@ def polls_reply(update: Update, context: CallbackContext) -> None:
     finally:
         pass
 
-
-def aux_create_option_button(cb_name, poll):
-    return InlineKeyboardButton(
-        text=f"{poll.text}",
-        callback_data=f"{cb_name}|{poll.text}|{poll.id}"
-    )
-
-
 def sugerir_opcion(update: Update, context: CallbackContext):
     reply_markup = obtener_botonera_polls("polls_reply")
     update.message.reply_text(
@@ -48,17 +41,6 @@ def sugerir_opcion(update: Update, context: CallbackContext):
     )
 
     return NOMBRE
-
-def obtener_botonera_polls(callback_name):
-    polls = get_polls()
-    columns = 3
-    botones = []
-    for k in range(0, len(polls), columns):
-        # TODO: make a function out of this
-        row = [aux_create_option_button(callback_name, p) for p in polls[k:k + columns]]
-        botones.append(row)
-    reply_markup = InlineKeyboardMarkup(botones)
-    return reply_markup
 
 def nombre(update: Update, context: CallbackContext) -> int:
     context.user_data["nombre_opcion"] = update.message.text
