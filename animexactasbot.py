@@ -18,7 +18,6 @@ from errors import error_callback
 from handlers.custom_handlers.buttoncallbackqueryhandler import ButtonCallbackQueryHandler
 from handlers.button.button_handler import button_handler, te_doy_botones
 from handlers.ejemplo.dame_botones import dame_botones
-from handlers.ejemplo.votar import votar
 from handlers.polls.create_poll import create_poll
 from handlers.polls.ranking import command_rank_polls, job_rank_polls
 from handlers.polls.sugerir_opcion import (
