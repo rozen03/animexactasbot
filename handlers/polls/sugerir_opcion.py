@@ -2,12 +2,11 @@ import logging
 
 from telegram import (
     Update,
-    InlineKeyboardButton,
     InlineKeyboardMarkup
 )
 from telegram.ext import CallbackContext, ConversationHandler
 
-from usecases.polls.sugerir_opcion import get_polls, store_option
+from usecases.polls.sugerir_opcion import store_option
 from handlers.utils.utils import obtener_botonera_polls
 
 NOMBRE, LINK = range(2)
