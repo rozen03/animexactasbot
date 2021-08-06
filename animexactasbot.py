@@ -18,7 +18,6 @@ from errors import error_callback
 from handlers.custom_handlers.buttoncallbackqueryhandler import ButtonCallbackQueryHandler
 from handlers.button.button_handler import button_handler, te_doy_botones
 from handlers.ejemplo.dame_botones import dame_botones
-from handlers.ejemplo.votar import votar
 from handlers.polls.create_poll import create_poll
 from handlers.polls.ranking import command_rank_polls, job_rank_polls
 from handlers.polls.sugerir_opcion import (
@@ -28,6 +27,11 @@ from handlers.polls.sugerir_opcion import (
     cancelar,
     polls_reply,
     sugerir_opcion
+)
+from handlers.ejemplo.votar import (
+    votar,
+    votar_opciones,
+    opcion_votada
 )
 
 # Enable logging
@@ -113,6 +117,20 @@ def main():
 
         votar_handler = CommandHandler('votar', votar)
         dispatcher.add_handler(votar_handler)
+
+        votar_opciones_handler = ButtonCallbackQueryHandler(
+            votar_opciones,
+            run_async=True,
+            pattern='^' + "votar_opciones"
+        )
+        dispatcher.add_handler(votar_opciones_handler)
+
+        opcion_votada_handler = ButtonCallbackQueryHandler(
+            opcion_votada,
+            run_async=True,
+            pattern='^' + "opcion_votada"
+        )
+        dispatcher.add_handler(opcion_votada_handler)
 
         te_doy_botones_handler = ButtonCallbackQueryHandler(
             te_doy_botones,
