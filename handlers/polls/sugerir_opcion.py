@@ -2,12 +2,12 @@ import logging
 
 from telegram import (
     Update,
-    InlineKeyboardButton,
     InlineKeyboardMarkup
 )
 from telegram.ext import CallbackContext, ConversationHandler
 
-from usecases.polls.sugerir_opcion import get_polls, store_option
+from usecases.polls.sugerir_opcion import store_option
+from handlers.utils.utils import obtener_botonera_polls
 
 NOMBRE, LINK = range(2)
 
@@ -31,23 +31,8 @@ def polls_reply(update: Update, context: CallbackContext) -> None:
     finally:
         pass
 
-
-def aux_create_option_button(poll):
-    return InlineKeyboardButton(
-        text=f"{poll.text}",
-        callback_data=f"polls_reply|{poll.text}|{poll.id}"
-    )
-
-
 def sugerir_opcion(update: Update, context: CallbackContext):
-    polls = get_polls()
-    columns = 3
-    botones = []
-    for k in range(0, len(polls), columns):
-        # TODO: make a function out of this
-        row = [aux_create_option_button(p) for p in polls[k:k + columns]]
-        botones.append(row)
-    reply_markup = InlineKeyboardMarkup(botones)
+    reply_markup = obtener_botonera_polls("polls_reply")
     update.message.reply_text(
         "De que poll querés sugerir una opción?\n\n"
         "Si querés cancelar la operación, podes escribir el comando /cancelar",
@@ -55,7 +40,6 @@ def sugerir_opcion(update: Update, context: CallbackContext):
     )
     # hola esto es un mensaje para molestar a facu (robi)
     return NOMBRE
-
 
 def nombre(update: Update, context: CallbackContext) -> int:
     context.user_data["nombre_opcion"] = update.message.text
