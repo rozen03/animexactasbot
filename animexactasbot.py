@@ -29,13 +29,18 @@ from handlers.polls.sugerir_opcion import (
     polls_reply,
     sugerir_opcion
 )
+from handlers.ejemplo.votar import (
+    votar,
+    votar_opciones,
+    opcion_votada
+)
 
 # Enable logging
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
 )
 
-logger = logging.getLogger('animexactasbot.log')
+logger = logging.getLogger('animeexactasbot.log')
 
 # Made this way not to use db
 descriptions = {
@@ -71,7 +76,7 @@ def main():
         # Telegram bot Authorization Token
         print("Iniciando ANIMEXACTASBOT")
         logger.info("Iniciando")
-        models.init_db("animexactasbot.sqlite3")
+        models.init_db("animeexactasbot.sqlite3")
         
         updater = Updater(token=config["TOKEN"], use_context=True)
 
@@ -113,6 +118,20 @@ def main():
 
         votar_handler = CommandHandler('votar', votar)
         dispatcher.add_handler(votar_handler)
+
+        votar_opciones_handler = CallbackQueryHandler(
+            votar_opciones,
+            run_async=True,
+            pattern='^' + "votar_opciones"
+        )
+        dispatcher.add_handler(votar_opciones_handler)
+
+        opcion_votada_handler = CallbackQueryHandler(
+            opcion_votada,
+            run_async=True,
+            pattern='^' + "opcion_votada"
+        )
+        dispatcher.add_handler(opcion_votada_handler)
 
         te_doy_botones_handler = ButtonCallbackQueryHandler(
             te_doy_botones,

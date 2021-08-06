@@ -32,22 +32,15 @@ def polls_reply(update: Update, context: CallbackContext) -> None:
         pass
 
 
-def aux_create_option_button(poll):
+def aux_create_option_button(cb_name, poll):
     return InlineKeyboardButton(
         text=f"{poll.text}",
-        callback_data=f"polls_reply|{poll.text}|{poll.id}"
+        callback_data=f"{cb_name}|{poll.text}|{poll.id}"
     )
 
 
 def sugerir_opcion(update: Update, context: CallbackContext):
-    polls = get_polls()
-    columns = 3
-    botones = []
-    for k in range(0, len(polls), columns):
-        # TODO: make a function out of this
-        row = [aux_create_option_button(p) for p in polls[k:k + columns]]
-        botones.append(row)
-    reply_markup = InlineKeyboardMarkup(botones)
+    reply_markup = obtener_botonera_polls("polls_reply")
     update.message.reply_text(
         "De que poll querés sugerir una opción?\n\n"
         "Si querés cancelar la operación, podes escribir el comando /cancelar",
@@ -56,6 +49,16 @@ def sugerir_opcion(update: Update, context: CallbackContext):
 
     return NOMBRE
 
+def obtener_botonera_polls(callback_name):
+    polls = get_polls()
+    columns = 3
+    botones = []
+    for k in range(0, len(polls), columns):
+        # TODO: make a function out of this
+        row = [aux_create_option_button(callback_name, p) for p in polls[k:k + columns]]
+        botones.append(row)
+    reply_markup = InlineKeyboardMarkup(botones)
+    return reply_markup
 
 def nombre(update: Update, context: CallbackContext) -> int:
     context.user_data["nombre_opcion"] = update.message.text
