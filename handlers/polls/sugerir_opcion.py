@@ -5,14 +5,59 @@ from telegram import (
     InlineKeyboardButton,
     InlineKeyboardMarkup
 )
-from telegram.ext import CallbackContext, ConversationHandler
-
+from telegram.ext import (CallbackContext, ConversationHandler,
+                            CommandHandler, Filters, MessageHandler,CallbackQueryHandler)
+from handlers.basehandler import BaseHandler
 from usecases.polls.sugerir_opcion import get_polls, store_option
 
 NOMBRE, LINK = range(2)
 
 logger = logging.getLogger('animexactasbot.log')
 
+
+class SugerirOpcionHandler(BaseHandler):
+    """Implement handlers for poll creation"""
+    @staticmethod
+    def build_handler():
+        return ConversationHandler(
+            entry_points=[CommandHandler('sugeriropcion', sugerir_opcion)],
+            states={
+                NOMBRE: [MessageHandler(Filters.text & ~Filters.command, nombre)],
+                LINK: [MessageHandler(Filters.text & ~Filters.command, link)]
+            },
+            fallbacks=[CommandHandler('cancelar', cancelar)]
+        )
+
+    @staticmethod
+    def command_name():
+        return "sugeriropcion"
+
+    @staticmethod
+    def command_description():
+        return "Sugiere opcion keseyo"
+
+
+class PollsReplyHandler(BaseHandler):
+    """Implement handlers for poll creation"""
+    @staticmethod
+    def build_handler():
+        return CallbackQueryHandler(
+            polls_reply,
+            run_async=True,
+            pattern='^' + "polls_reply"
+        )
+
+    @staticmethod
+    def has_description():
+        return False
+
+    @staticmethod
+    def command_name():
+        pass
+
+    @staticmethod
+    def command_description():
+        pass
 
 def polls_reply(update: Update, context: CallbackContext) -> None:
     query = update.callback_query

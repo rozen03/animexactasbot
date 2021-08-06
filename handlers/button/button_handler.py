@@ -3,7 +3,10 @@
 
 
 from telegram import InlineKeyboardMarkup, Update
-from telegram.ext.callbackcontext import CallbackContext
+from telegram.ext import CallbackContext,CallbackQueryHandler
+from handlers.custom_handlers.buttoncallbackqueryhandler import ButtonCallbackQueryHandler
+
+from handlers.basehandler import BaseHandler
 
 # noinspection Pylint
 """ 
@@ -27,6 +30,47 @@ Every Button comes with callback_data, let's have a common ground of how to deal
     the callback data and create classes that would handle those different cases.
 
 """
+
+class TeDoyBotonesHandler(BaseHandler):
+    """Implement handlers for voting"""
+    @staticmethod
+    def build_handler():
+        return ButtonCallbackQueryHandler(
+            te_doy_botones,
+            run_async=True,
+            pattern='^' + "dame_botones"
+        )
+
+    @staticmethod
+    def has_description():
+        return False
+
+    @staticmethod
+    def command_name():
+        pass
+
+    @staticmethod
+    def command_description():
+        pass
+
+
+class ButtonHandler(BaseHandler):
+    """Implement handlers for voting"""
+    @staticmethod
+    def build_handler():
+        return CallbackQueryHandler(button_handler, run_async=True)
+
+    @staticmethod
+    def has_description():
+        return False
+
+    @staticmethod
+    def command_name():
+        pass
+
+    @staticmethod
+    def command_description():
+        pass
 
 
 def button_handler(update: Update, context: CallbackContext) -> None:
