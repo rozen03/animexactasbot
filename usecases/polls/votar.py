@@ -13,7 +13,7 @@ def get_options_from_poll(poll_name):
 @db_session
 def create_vote(id_a, id_b, id_selected):
     generic_user = User(calls=1)
-    vote = Vote(option_a=Option[int(id_a)],
+    Vote(option_a=Option[int(id_a)],
         option_b=Option[int(id_a)],
         user=generic_user,
         poll=Option[int(id_a)].poll,
