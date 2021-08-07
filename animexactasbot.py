@@ -15,6 +15,7 @@ from telegram.ext import (CallbackContext, CallbackQueryHandler, CommandHandler,
 import models
 from config import config
 from errors import error_callback
+from handlers.button.validate_button import validate_button
 from handlers.custom_handlers.buttoncallbackqueryhandler import ButtonCallbackQueryHandler
 from handlers.button.button_handler import button_handler, te_doy_botones
 from handlers.ejemplo.dame_botones import dame_botones
@@ -45,7 +46,9 @@ logger = logging.getLogger('animexactasbot.log')
 descriptions = {
     "help": "Da una lista de comandos básicos",
     "crearpoll": "Permite crear una nueva encuesta",
-    "damebotones": "Da botones y descubre cosas sobre tu persona al usarlos"
+    "damebotones": "Da botones y descubre cosas sobre tu persona al usarlos",
+    "sugeriropcion": "Permite sugerir una opción para alguna poll",
+    "votar": "Te deja votar entre 2 opciones de una poll, vota bien (?)"
 }
 
 
@@ -76,7 +79,7 @@ def main():
         print("Iniciando ANIMEXACTASBOT")
         logger.info("Iniciando")
         models.init_db("animexactasbot.sqlite3")
-        
+
         updater = Updater(token=config["TOKEN"], use_context=True)
 
         dispatcher = updater.dispatcher
@@ -86,14 +89,12 @@ def main():
         start_handler = CommandHandler('start', start)
         dispatcher.add_handler(start_handler)
 
-        estasvivo_handler = CommandHandler('estasvivo', estas_vivo, run_async=True)
-        dispatcher.add_handler(estasvivo_handler)
+        dispatcher.add_handler(CommandHandler('estasvivo', estas_vivo, run_async=True))
 
         help_handler = CommandHandler('help', help_message)
         dispatcher.add_handler(help_handler)
 
-        damebotones_handler = CommandHandler('damebotones', dame_botones)
-        dispatcher.add_handler(damebotones_handler)
+        dispatcher.add_handler(CommandHandler('damebotones', dame_botones))
 
         create_poll_handler = CommandHandler(['crearpoll', 'createPoll'], create_poll)
         dispatcher.add_handler(create_poll_handler)
@@ -139,8 +140,14 @@ def main():
         )
         dispatcher.add_handler(te_doy_botones_handler)
 
-        dispatcher.add_handler(CallbackQueryHandler(button_handler, run_async=True))
+        validate_button_handler = ButtonCallbackQueryHandler(
+            validate_button,
+            run_async=True,
+            pattern='^' + "validate_button"
+        )
+        dispatcher.add_handler(validate_button_handler)
 
+        dispatcher.add_handler(CallbackQueryHandler(button_handler, run_async=True))
 
         updater.job_queue.run_daily(callback=job_rank_polls, time=datetime.time())
 

@@ -6,8 +6,9 @@ from telegram import (
 )
 from telegram.ext import CallbackContext, ConversationHandler
 
-from usecases.polls.sugerir_opcion import store_option
 from handlers.utils.utils import obtener_botonera_polls
+from handlers.utils.valide_suggestion import create_suggestion_validation
+from usecases.polls.sugerir_opcion import store_option
 
 NOMBRE, LINK = range(2)
 
@@ -31,6 +32,7 @@ def polls_reply(update: Update, context: CallbackContext) -> None:
     finally:
         pass
 
+
 def sugerir_opcion(update: Update, context: CallbackContext):
     reply_markup = obtener_botonera_polls("polls_reply")
     update.message.reply_text(
@@ -38,8 +40,8 @@ def sugerir_opcion(update: Update, context: CallbackContext):
         "Si querés cancelar la operación, podes escribir el comando /cancelar",
         reply_markup=reply_markup
     )
-    # hola esto es un mensaje para molestar a facu (robi)
     return NOMBRE
+
 
 def nombre(update: Update, context: CallbackContext) -> int:
     context.user_data["nombre_opcion"] = update.message.text
@@ -54,13 +56,17 @@ def nombre(update: Update, context: CallbackContext) -> int:
 def link(update: Update, context: CallbackContext) -> int:
     context.user_data['link'] = update.message.text
 
-    store_option(context.user_data)
+    option = store_option(context.user_data)
 
+    reply_markup = create_suggestion_validation(option.__class__.__name__, option.id)
+    context.bot.sendMessage(chat_id=137497264,
+                            text=f"{option.__class__.__name__}: {option.text}",
+                            reply_markup=reply_markup)
     # noinspection Pylint
     update.message.reply_text(
-        # "Tu sugerencia fue añadida correctamente y esta pendiente de ser aprobada."
         # noinspection Pylint
-        """Tu sugerencia fue añadida al poll correctamente y aparecerá entre las opciones a rankear.
+        """Tu sugerencia fue añadida al poll correctamente.
+        Cuando sea aceptada aparecerá entre las opciones a rankear.
         
         Felicitaciones Dante!!"""
     )

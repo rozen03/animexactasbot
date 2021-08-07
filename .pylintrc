@@ -12,6 +12,6 @@ disable=
     pointless-string-statement,
     trailing-whitespace,
     F0001, # need to remove this ASAP
-
+    E1101, # linter breaks because pony db.Entity does not have "id"
 
 # I'm still playing with this file
