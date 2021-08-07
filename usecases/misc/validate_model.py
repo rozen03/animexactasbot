@@ -1,15 +1,13 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-import inspect
-import sys
 
 from models import *  # pylint: disable=redefined-builtin
 
 
 def get_model(button_type):
-    for name, obj in inspect.getmembers(sys.modules["models"]):
-        if inspect.isclass(obj) and name == button_type:
-            return obj
+    for entity in db.Entity.__subclasses__():
+        if entity.__name__ == button_type:
+            return entity
     raise Exception(f"There is no class with {button_type} name")
 
 
