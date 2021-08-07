@@ -75,11 +75,7 @@ def opcion_votada(update: Update, context: CallbackContext) -> None:
 
     query.message.reply_text(f"Has votado {selected_name}. \n\n"
                              "Gracias por participar :D")
-    if random.randint(0, 100) < 25:
-        if random.randint(0, 100) < 30:
-            query.message.reply_text("Votaste bien ;)")
-        else:
-            query.message.reply_text("Que haces? Votaste MAAAAL")
+
     try:
         query.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup([]))
     finally:
