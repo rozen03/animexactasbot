@@ -29,3 +29,31 @@ def rank_polls():
 
     for poll_id in poll_ids:
         rank_poll(poll_id=poll_id)
+"""
+>>> from rankit.Table import *
+>>> from rankit.Ranker import *
+
+>>> matrez=[[0,1,0,1],[0,2,0,1],[2,1,1,0]]
+>>> pd.DataFrame(matrez, columns=["team_a","team_b","result_a","result_b"])
+   team_a  team_b  result_a  result_b
+0       0       1         0         1
+1       0       2         0         1
+2       2       1         1         0
+>>> df=pd.DataFrame(matrez, columns=["team_a","team_b","result_a","result_b"])
+>>> Tab
+TabError(  Table(     
+>>> Table(df, col=["team_a","team_b","result_a","result_b"])
+Table with provided data:
+   host  visit  hscore  vscore
+0     0      1       0       1
+1     0      2       0       1
+2     2      1       1       0
+>>> table=Table(df, col=["team_a","team_b","result_a","result_b"])
+>>> coco=ColleyRanker()
+>>> coco.rank(table)
+   name  rating  rank
+0     2     0.7     1
+1     1     0.5     2
+2     0     0.3     3
+
+"""

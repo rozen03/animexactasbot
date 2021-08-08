@@ -13,11 +13,13 @@ from telegram.ext import CallbackContext
 from usecases.polls.votar import get_options_from_poll, create_vote
 from handlers.utils.utils import obtener_botonera_polls
 
+
 def votar(update: Update, context: CallbackContext):
     reply_markup = obtener_botonera_polls("votar_opciones")
     reply_msg = "Elija una de las siguientes encuestas a votar:"
     update.message.reply_text(reply_msg,
-        reply_markup=reply_markup)
+                              reply_markup=reply_markup)
+
 
 def votar_opciones(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
@@ -28,7 +30,7 @@ def votar_opciones(update: Update, context: CallbackContext) -> None:
 
     options = get_options_from_poll(callback_args[2])
     choices = random.sample(list(options), 2)
-    
+
     if len(choices) == 2:
         choices_buttons = [
             InlineKeyboardButton(
@@ -62,6 +64,7 @@ def votar_opciones(update: Update, context: CallbackContext) -> None:
             'Elija otra de las opciones.'
         )
 
+
 def opcion_votada(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     callback_args = query.data.split("|")
@@ -71,7 +74,7 @@ def opcion_votada(update: Update, context: CallbackContext) -> None:
     selected_name = create_vote(id_a, id_b, id_selected)
 
     query.message.reply_text(f"Has votado {selected_name}. \n\n"
-        "Gracias por participar :D")
+                             "Gracias por participar :D")
 
     try:
         query.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup([]))
