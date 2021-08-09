@@ -19,6 +19,7 @@ class Poll(db.Entity):  # pylint: disable=missing-class-docstring
     delete_at = Optional(datetime.datetime)
     periodic_votes = Required(int)
     period = Required(str)
+    approved = Required(bool, default=False)
     results = Set("Result")
     options = Set("Option")
     votes = Set("Vote")
