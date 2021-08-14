@@ -24,11 +24,10 @@ def votar(update: Update, context: CallbackContext):
 def votar_opciones(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     callback_args = query.data.split("|")
-
     poll_name = callback_args[1]
-    context.user_data['poll_id'] = callback_args[2]
+    poll_id = callback_args[2]
 
-    options = get_options_from_poll(callback_args[2])
+    options = get_options_from_poll(poll_id)
     choices = random.sample(list(options), 2)
 
     if len(choices) == 2:
@@ -42,23 +41,25 @@ def votar_opciones(update: Update, context: CallbackContext) -> None:
                 callback_data=f"opcion_votada|{choices[0].id}|{choices[1].id}|{choices[1].id}"
             )
         ]
-
-        query.message.reply_text(
-            f'Has elegido la encuesta de {poll_name}.\n\n'
-            '¿Cuál de las siguientes opciones es la mejor?\n'
-            f'[{choices[0].text}]({choices[0].url})\n'
-            f'[{choices[1].text}]({choices[1].url})',
-            reply_markup=InlineKeyboardMarkup([choices_buttons]),
-            disable_web_page_preview=True,
-            parse_mode=telegram.ParseMode.MARKDOWN
-        )
-
+        reroll = [InlineKeyboardButton(
+            text="No sé, dame otro",
+            callback_data=f"dame_otro|{poll_name}|{poll_id}"
+        )]
+        reply_markup = InlineKeyboardMarkup([choices_buttons, reroll])
         try:
-            query.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup([]))
+            query.edit_message_text(
+                f'Has elegido la encuesta de {poll_name}.\n\n'
+                '¿Cuál de las siguientes opciones es la mejor?\n'
+                f'[{choices[0].text}]({choices[0].url})\n'
+                f'[{choices[1].text}]({choices[1].url})',
+                reply_markup=reply_markup,
+                disable_web_page_preview=True,
+                parse_mode=telegram.ParseMode.MARKDOWN
+            )
         finally:
             pass
     else:
-        query.message.reply_text(
+        query.message.edit_text(
             f'Has elegido la encuesta de {poll_name}.\n\n'
             'No obstante, actualmente no hay 2 opciones para votar.'
             'Elija otra de las opciones.'

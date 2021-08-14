@@ -20,7 +20,12 @@ from handlers.custom_handlers.buttoncallbackqueryhandler import ButtonCallbackQu
 from handlers.button.button_handler import button_handler, te_doy_botones
 from handlers.ejemplo.dame_botones import dame_botones
 from handlers.polls.create_poll import create_poll
-from handlers.polls.ranking import command_rank_polls, job_rank_polls
+from handlers.polls.ranking import (
+    command_rank_polls,
+    job_rank_polls,
+    get_ranking,
+    get_ranking_polls
+)
 from handlers.polls.sugerir_opcion import (
     NOMBRE, LINK,
     nombre,
@@ -122,7 +127,7 @@ def main():
         votar_opciones_handler = ButtonCallbackQueryHandler(
             votar_opciones,
             run_async=True,
-            pattern='^' + "votar_opciones"
+            pattern='^' + "(votar_opciones|dame_otro)"
         )
         dispatcher.add_handler(votar_opciones_handler)
 
@@ -147,12 +152,27 @@ def main():
         )
         dispatcher.add_handler(validate_button_handler)
 
+        get_ranking_handler = ButtonCallbackQueryHandler(
+            get_ranking,
+            run_async=True,
+            pattern='^' + "get_ranking"
+        )
+        dispatcher.add_handler(get_ranking_handler)
+        get_ranking_handler = ButtonCallbackQueryHandler(
+            get_ranking,
+            run_async=True,
+            pattern='^' + "get_ranking"
+        )
+        dispatcher.add_handler(get_ranking_handler)
+
         dispatcher.add_handler(CallbackQueryHandler(button_handler, run_async=True))
 
         updater.job_queue.run_daily(callback=job_rank_polls, time=datetime.time())
 
         manual_rank_polls = CommandHandler('rankeameloh', command_rank_polls, run_async=True)
         dispatcher.add_handler(manual_rank_polls)
+
+        dispatcher.add_handler(CommandHandler('ranking', get_ranking_polls, run_async=True))
 
         dispatcher.bot.set_my_commands(get_command_list())
         # Start running the bot
