@@ -2,65 +2,65 @@
 # -*- coding: utf-8 -*-
 
 import logging
-# from pony.orm import *  # pylint: disable=redefined-builtin
-from pony.orm import desc
+import sys
+import traceback
 
+import pandas as pd
+from pony.orm import desc
+from rankit import Ranker
+from rankit.Table import Table
+from rankit.Ranker.matrix_build import fast_colley_build
 from models import Poll, Vote, Option, Result, db_session, select, delete
+from usecases.polls.my_ranker import MyColleyRanker
 
 logger = logging.getLogger('animexactasbot.log')
+
+ranker = MyColleyRanker()
+
+
+# ranker = Ranker.KeenerRanker()
 
 
 @db_session
 def rank_poll(poll_id):
     votes = select(v for v in Vote if v.poll.id == poll_id and v.poll.approved)[:]
-    scores = {o.id: 0 for o in select(o for o in Option if o.poll.id == poll_id and o.approved)}
+    used = {o.id: False for o in select(o for o in Option if o.poll.id == poll_id and o.approved)}
+    votes_matrix = []
     for vote in votes:
-        if vote.selected == 0:
-            scores[vote.option_a.id] += 1
+        opta = vote.option_a.id
+        optb = vote.option_b.id
+        if vote.selected == opta:
+            row = [opta, optb, 1, 0]
+        elif vote.selected == optb:
+            row = [opta, optb, 0, 1]
         else:
-            scores[vote.option_b.id] += 1
+            raise Exception("QUE PASO POR Q HAY UNA OPCION NUEVA???")
+        used[opta] = True
+        used[optb] = True
+        votes_matrix.append(row)
+    for k, v in used.items():
+        if not v:
+            votes_matrix.append([k, k, 0, 0])  # ah, i'm drinking falop again
+
+    df = pd.DataFrame(votes_matrix, columns=["team_a", "team_b", "result_a", "result_b"])
+    table = Table(df, col=["team_a", "team_b", "result_a", "result_b"])
+    ranking = ranker.rank(table)
     delete(r for r in Result if r.poll.id == poll_id)
-    for option_id, score in scores.items():
-        Result(poll=poll_id, option=option_id, score=score)
+    for index, row in ranking.iterrows():
+        Result(poll=poll_id, option=int(row["name"]), score=row["rating"])
 
 
 def rank_polls():
     with db_session:
-        poll_ids = select(p.id for p in Poll if p.delete_at is None)[:]
+        poll_ids = select(p.id for p in Poll if p.delete_at is None and p.approved)[:]
 
     for poll_id in poll_ids:
         rank_poll(poll_id=poll_id)
-"""
->>> from rankit.Table import *
->>> from rankit.Ranker import *
-
->>> matrez=[[0,1,0,1],[0,2,0,1],[2,1,1,0]]
->>> pd.DataFrame(matrez, columns=["team_a","team_b","result_a","result_b"])
-   team_a  team_b  result_a  result_b
-0       0       1         0         1
-1       0       2         0         1
-2       2       1         1         0
->>> df=pd.DataFrame(matrez, columns=["team_a","team_b","result_a","result_b"])
->>> Tab
-TabError(  Table(     
->>> Table(df, col=["team_a","team_b","result_a","result_b"])
-Table with provided data:
-   host  visit  hscore  vscore
-0     0      1       0       1
-1     0      2       0       1
-2     2      1       1       0
->>> table=Table(df, col=["team_a","team_b","result_a","result_b"])
->>> coco=ColleyRanker()
->>> coco.rank(table)
-   name  rating  rank
-0     2     0.7     1
-1     1     0.5     2
-2     0     0.3     3
-
-"""
 
 @db_session
 def get_rank(poll_id):
     rankings = select(r for r in Result if r.poll.id == poll_id).order_by(desc(Result.score))
+    for r in rankings:
+        print(r.option.text, r.score)
     response = [r.option.text for r in rankings]
     return response

@@ -6,6 +6,7 @@ import datetime
 
 import logging
 
+import telegram.ext
 from telegram import (Update)
 from telegram.botcommand import BotCommand
 from telegram.ext import (CallbackContext, CallbackQueryHandler, CommandHandler,
@@ -41,6 +42,8 @@ from handlers.ejemplo.votar import (
 )
 
 # Enable logging
+from usecases.misc.user import save_user_from_message, save_user_from_button
+
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
 )
@@ -89,7 +92,10 @@ def main():
 
         dispatcher = updater.dispatcher
         dispatcher.add_error_handler(error_callback)
-
+        # TODO: create a different handler, i was really sleepy
+        dispatcher.add_handler(MessageHandler(filters=telegram.ext.Filters.all, callback=save_user_from_message),
+                               group=1)
+        dispatcher.add_handler(CallbackQueryHandler(save_user_from_button), group=1)
         # Commands
         start_handler = CommandHandler('start', start)
         dispatcher.add_handler(start_handler)

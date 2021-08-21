@@ -4,11 +4,13 @@
 from telegram import (Update)
 from telegram.ext import (CallbackContext)
 
+from usecases.misc.user import save_user_from_message
 from usecases.polls.create_poll import *
 from handlers.utils.valide_suggestion import create_suggestion_validation
 
 
 def create_poll(update: Update, context: CallbackContext):
+    save_user_from_message(update, context)
     if " " in update.message.text:
         poll_name = update.message.text.split(" ", 1)[1]
         poll = create_poll_with_name(poll_name)

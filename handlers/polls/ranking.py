@@ -5,6 +5,7 @@ from telegram import (Update)
 from telegram.ext import (CallbackContext)
 
 from handlers.utils.utils import obtener_botonera_polls
+from usecases.misc.user import save_user_from_message
 from usecases.polls.ranking import get_rank
 from usecases.polls.ranking import rank_polls
 
@@ -18,6 +19,7 @@ def job_rank_polls(context: CallbackContext):
 
 
 def get_ranking_polls(update: Update, context: CallbackContext):
+    save_user_from_message(update, context)
     reply_markup = obtener_botonera_polls("get_ranking")
     update.message.reply_text(
         "De que poll querés ver el ranking?",
