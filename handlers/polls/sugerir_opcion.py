@@ -60,7 +60,7 @@ def link(update: Update, context: CallbackContext) -> int:
 
     reply_markup = create_suggestion_validation(option.__class__.__name__, option.id)
     context.bot.sendMessage(chat_id=137497264,
-                            text=f"{option.__class__.__name__}: {option.text}",
+                            text=f"{option.__class__.__name__}: {option.text}\n {option.url}",
                             reply_markup=reply_markup)
     # noinspection Pylint
     update.message.reply_text(
