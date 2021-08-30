@@ -1,9 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-import datetime
 import random
-import telegram
 
+import telegram
 from telegram import (
     Update,
     InlineKeyboardButton,
@@ -11,11 +10,11 @@ from telegram import (
 )
 from telegram.ext import CallbackContext
 
+from handlers.utils.utils import obtener_botonera_polls
 from usecases.misc.user import save_user_from_button
 from usecases.polls.ranking import rank_poll
 from usecases.polls.sugerir_opcion import get_polls
 from usecases.polls.votar import get_options_from_poll, create_vote
-from handlers.utils.utils import obtener_botonera_polls
 
 
 def deprecate_vote_message(context: CallbackContext):
