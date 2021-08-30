@@ -4,6 +4,7 @@
 from telegram import (Update)
 from telegram.ext import (CallbackContext)
 
+from handlers.ejemplo.votar import send_votation, send_random_votes
 from handlers.utils.utils import obtener_botonera_polls
 from usecases.misc.user import save_user_from_message
 from usecases.polls.ranking import get_rank
@@ -41,3 +42,9 @@ def get_ranking(update: Update, context: CallbackContext) -> None:
         query.edit_message_text(text=f'Elegiste el poll de {poll_name}.\n\n' + ranks_text)
     finally:
         pass
+
+
+def job_send_votes(context: CallbackContext):
+    print("Voy a mandar voto")
+    send_random_votes(context, "-1001244943487")
+    print("mandé voto")

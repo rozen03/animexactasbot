@@ -109,7 +109,9 @@ def send_votation(context: CallbackContext, query, poll_id, poll_name):
             parse_mode=telegram.ParseMode.MARKDOWN
         )
     except Exception as e:
+        print("send_votation error", e)
         print(context.job.context)
+        return
         chat_id = context.job.context["chat_id"]
         message = context.bot.send_message(text=f'Has elegido la encuesta de {poll_name}.\n\n'
                                                 '¿Cuál de las siguientes opciones es la mejor?\n'
@@ -129,4 +131,36 @@ def send_votation(context: CallbackContext, query, poll_id, poll_name):
     new_context["message_text"] = message_text
     new_context["chat_id"] = chat_id
 
-    context.job_queue.run_once(deprecate_vote_message, datetime.timedelta(hours=4), context=new_context)
+#    context.job_queue.run_once(deprecate_vote_message, datetime.timedelta(hours=4), context=new_context)
+
+
+def send_random_votes(context: CallbackContext, chat_id: str):
+    polls = get_polls()
+    poll = random.choice(list(polls))
+    poll_id = poll.id
+    poll_name = poll.text
+    options = get_options_from_poll(poll_id)
+    choices = random.sample(list(options), 2)
+    choices_buttons = [
+        InlineKeyboardButton(
+            text=f"{choices[0].text}",
+            callback_data=f"opcion_votada|{choices[0].id}|{choices[1].id}|{choices[0].id}"
+        ),
+        InlineKeyboardButton(
+            text=f"{choices[1].text}",
+            callback_data=f"opcion_votada|{choices[0].id}|{choices[1].id}|{choices[1].id}"
+        )
+    ]
+    reroll = [InlineKeyboardButton(
+        text="No sé, dame otro",
+        callback_data=f"dame_otro|{poll_name}|{poll_id}"
+    )]
+    reply_markup = InlineKeyboardMarkup([choices_buttons, reroll])
+    message = context.bot.send_message(text=f'Votemos la encuesta de {poll_name}.\n\n'
+                                            '¿Cuál de las siguientes opciones es la mejor?\n'
+                                            f'[{choices[0].text}]({choices[0].url})\n'
+                                            f'[{choices[1].text}]({choices[1].url})',
+                                       chat_id=chat_id,
+                                       reply_markup=reply_markup,
+                                       disable_web_page_preview=True,
+                                       parse_mode=telegram.ParseMode.MARKDOWN)

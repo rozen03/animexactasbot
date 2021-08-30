@@ -6,6 +6,7 @@ import datetime
 
 import logging
 
+import pytz
 import telegram.ext
 from telegram import (Update)
 from telegram.botcommand import BotCommand
@@ -25,7 +26,7 @@ from handlers.polls.ranking import (
     command_rank_polls,
     job_rank_polls,
     get_ranking,
-    get_ranking_polls
+    get_ranking_polls, job_send_votes
 )
 from handlers.polls.sugerir_opcion import (
     NOMBRE, LINK,
@@ -179,7 +180,10 @@ def main():
         dispatcher.add_handler(manual_rank_polls)
 
         dispatcher.add_handler(CommandHandler('ranking', get_ranking_polls, run_async=True))
-
+        for hour in [9, 13, 17, 21]:
+            updater.job_queue.run_daily(callback=job_send_votes, time=datetime.time(hour=hour, minute=0, second=0,
+                                                                                    tzinfo=pytz.timezone(
+                                                                                        'America/Argentina/Buenos_Aires')))
         dispatcher.bot.set_my_commands(get_command_list())
         # Start running the bot
         updater.start_polling()
