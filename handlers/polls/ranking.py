@@ -52,6 +52,8 @@ def job_send_votes(context: CallbackContext):
     try:
         send_random_votes(context, "-1001244943487")
     except Exception as e:
+        context.bot.sendMessage(137497264, text="Allgo falló mandando random votes")
+        context.bot.sendMessage(137497264, text=str(e))
         logger.error("iba a mandar mensaje y esto:")
         logger.exception(e)
         raise e
