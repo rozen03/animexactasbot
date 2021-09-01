@@ -46,7 +46,7 @@ from handlers.ejemplo.votar import (
 from usecases.misc.user import save_user_from_message, save_user_from_button
 
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO, filename="animexactasbot.log"
 )
 
 logger = logging.getLogger('animexactasbot.log')
