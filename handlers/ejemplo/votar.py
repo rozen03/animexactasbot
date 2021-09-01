@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+import logging
 import random
 
 import telegram
@@ -16,6 +17,7 @@ from usecases.polls.ranking import rank_poll
 from usecases.polls.sugerir_opcion import get_polls
 from usecases.polls.votar import get_options_from_poll, create_vote
 
+logger = logging.getLogger('animexactasbot.log')
 
 def deprecate_vote_message(context: CallbackContext):
     chat_id = context.job.context["chat_id"]
@@ -108,8 +110,8 @@ def send_votation(context: CallbackContext, query, poll_id, poll_name):
             parse_mode=telegram.ParseMode.MARKDOWN
         )
     except Exception as e:
-        print("send_votation error", e)
-        print(context.job.context)
+        logger.info("send_votation error", e)
+        logger.info(context.job.context)
         return
         chat_id = context.job.context["chat_id"]
         message = context.bot.send_message(text=f'Has elegido la encuesta de {poll_name}.\n\n'

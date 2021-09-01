@@ -57,4 +57,4 @@ def job_send_votes(context: CallbackContext):
         logger.error("iba a mandar mensaje y esto:")
         logger.exception(e)
         raise e
-    print("mandé voto")
+    logger.info("mandé voto")

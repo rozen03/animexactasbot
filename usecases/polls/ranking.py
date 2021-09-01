@@ -60,7 +60,5 @@ def rank_polls():
 @db_session
 def get_rank(poll_id):
     rankings = select(r for r in Result if r.poll.id == poll_id).order_by(desc(Result.score))
-    for r in rankings:
-        print(r.option.text, r.score)
     response = [r.option.text for r in rankings]
     return response
