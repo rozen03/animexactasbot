@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+import logging
 
 from telegram import (Update)
 from telegram.ext import (CallbackContext)
@@ -10,6 +11,7 @@ from usecases.misc.user import save_user_from_message
 from usecases.polls.ranking import get_rank
 from usecases.polls.ranking import rank_polls
 
+logger = logging.getLogger('animexactasbot.log')
 
 def command_rank_polls(update: Update, context: CallbackContext):
     rank_polls()
@@ -45,6 +47,12 @@ def get_ranking(update: Update, context: CallbackContext) -> None:
 
 
 def job_send_votes(context: CallbackContext):
-    print("Voy a mandar voto")
-    send_random_votes(context, "-1001244943487")
+
+    logger.info("Voy a mandar voto")
+    try:
+        send_random_votes(context, "-1001244943487")
+    except Exception as e:
+        logger.error("iba a mandar mensaje y esto:")
+        logger.exception(e)
+        raise e
     print("mandé voto")

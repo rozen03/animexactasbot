@@ -62,7 +62,6 @@ descriptions = {
 
 
 def start(update: Update, context: CallbackContext) -> None:
-    print(update)
     update.message.reply_text("Hola este es un mensaje de inicio, que se yo")
 
 
