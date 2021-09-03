@@ -1,6 +1,7 @@
 # animexactasbot
 
-Para probar el bot en acción en Telegram es necesario crear un archivo `tokenz.py` que asigne a la variable `token` el token del bot con el que se desea hacer las pruebas.
+Para probar el bot en acción en Telegram es necesario crear un archivo `.env` que asigne `TOKEN` el token del bot con el que se desea hacer las pruebas.
+Otros valores pueden llegar a ser necesarios, mirar `.env.example`
 
 Para instalar las dependecias correr lo siguiente:
 ```bash

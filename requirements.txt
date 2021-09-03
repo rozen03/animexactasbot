@@ -3,3 +3,7 @@ python_telegram_bot
 pytz
 requests
 python-dotenv
+rankit
+pandas
+numpy
+scipy
