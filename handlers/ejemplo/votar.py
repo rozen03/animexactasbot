@@ -67,10 +67,11 @@ def opcion_votada(update: Update, context: CallbackContext) -> None:
 
     selected_name, voted = create_vote(id_a, id_b, id_selected, update.callback_query.from_user.id)
     if voted:
-        context.bot.answer_callback_query(callback_query_id=query.id, text=f'votaste a {selected_name}',
-                                          show_alert=True)
+        context.bot.answer_callback_query(callback_query_id=query.id,
+            text=f'votaste a {selected_name}', show_alert=True)
     else:
-        context.bot.answer_callback_query(callback_query_id=query.id, text=f'Ya habías votado che', show_alert=True)
+        context.bot.answer_callback_query(callback_query_id=query.id,
+            text='Ya habías votado che', show_alert=True)
 
 
 def send_votation(context: CallbackContext, query, poll_id, poll_name):
@@ -109,12 +110,12 @@ def send_votation(context: CallbackContext, query, poll_id, poll_name):
             disable_web_page_preview=True,
             parse_mode=telegram.ParseMode.MARKDOWN
         )
-    except Exception as e:
-        logger.info("send_votation error", e)
+    except Exception as exp:
+        logger.info("send_votation error", exp)
         logger.info(context.job.context)
         return
-        chat_id = context.job.context["chat_id"]
-        message = context.bot.send_message(text=f'Has elegido la encuesta de {poll_name}.\n\n'
+    chat_id = context.job.context["chat_id"]
+    message = context.bot.send_message(text=f'Has elegido la encuesta de {poll_name}.\n\n'
                                                 '¿Cuál de las siguientes opciones es la mejor?\n'
                                                 f'[{choices[0].text}]({choices[0].url})\n'
                                                 f'[{choices[1].text}]({choices[1].url})',
@@ -127,12 +128,13 @@ def send_votation(context: CallbackContext, query, poll_id, poll_name):
         message_text = message.text
     finally:
         pass
-    new_context = dict()
+    new_context = {}
     new_context["message_id"] = message_id
     new_context["message_text"] = message_text
     new_context["chat_id"] = chat_id
 
-#    context.job_queue.run_once(deprecate_vote_message, datetime.timedelta(hours=4), context=new_context)
+#   context.job_queue.run_once(deprecate_vote_message,
+#   datetime.timedelta(hours=4), context=new_context)
 
 
 def send_random_votes(context: CallbackContext, chat_id: str):
@@ -157,7 +159,7 @@ def send_random_votes(context: CallbackContext, chat_id: str):
         callback_data=f"dame_otro|{poll_name}|{poll_id}"
     )]
     reply_markup = InlineKeyboardMarkup([choices_buttons, reroll])
-    message = context.bot.send_message(text=f'Votemos la encuesta de {poll_name}.\n\n'
+    context.bot.send_message(text=f'Votemos la encuesta de {poll_name}.\n\n'
                                             '¿Cuál de las siguientes opciones es la mejor?\n'
                                             f'[{choices[0].text}]({choices[0].url})\n'
                                             f'[{choices[1].text}]({choices[1].url})',

@@ -46,7 +46,8 @@ from handlers.ejemplo.votar import (
 from usecases.misc.user import save_user_from_message, save_user_from_button
 
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO, filename="animexactasbot.log"
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO, filename="animexactasbot.log"
 )
 
 logger = logging.getLogger('animexactasbot.log')
@@ -93,8 +94,8 @@ def main():
         dispatcher = updater.dispatcher
         dispatcher.add_error_handler(error_callback)
         # TODO: create a different handler, i was really sleepy
-        dispatcher.add_handler(MessageHandler(filters=telegram.ext.Filters.all, callback=save_user_from_message),
-                               group=1)
+        dispatcher.add_handler(MessageHandler(filters=telegram.ext.Filters.all,
+            callback=save_user_from_message), group=1)
         dispatcher.add_handler(CallbackQueryHandler(save_user_from_button), group=1)
         # Commands
         start_handler = CommandHandler('start', start)
@@ -180,9 +181,10 @@ def main():
 
         dispatcher.add_handler(CommandHandler('ranking', get_ranking_polls, run_async=True))
         for hour in [9, 13, 17, 21]:
-            updater.job_queue.run_daily(callback=job_send_votes, time=datetime.time(hour=hour, minute=0, second=0,
-                                                                                    tzinfo=pytz.timezone(
-                                                                                        'America/Argentina/Buenos_Aires')))
+            updater.job_queue.run_daily(callback=job_send_votes,
+                time=datetime.time(hour=hour, minute=0, second=0,
+                tzinfo=pytz.timezone(
+                'America/Argentina/Buenos_Aires')))
         dispatcher.bot.set_my_commands(get_command_list())
         # Start running the bot
         updater.start_polling()
