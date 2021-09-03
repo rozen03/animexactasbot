@@ -2,14 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import logging
-import sys
-import traceback
 
 import pandas as pd
 from pony.orm import desc
 from rankit import Ranker
 from rankit.Table import Table
-from rankit.Ranker.matrix_build import fast_colley_build
 from models import Poll, Vote, Option, Result, db_session, select, delete
 from usecases.polls.my_ranker import MyColleyRanker
 
@@ -38,12 +35,12 @@ def rank_poll(poll_id):
         used[opta] = True
         used[optb] = True
         votes_matrix.append(row)
-    for k, v in used.items():
-        if not v:
-            votes_matrix.append([k, k, 0, 0])  # ah, i'm drinking falop again
+    for key, value in used.items():
+        if not value:
+            votes_matrix.append([key, key, 0, 0])  # ah, i'm drinking falop again
 
-    df = pd.DataFrame(votes_matrix, columns=["team_a", "team_b", "result_a", "result_b"])
-    table = Table(df, col=["team_a", "team_b", "result_a", "result_b"])
+    data_frame = pd.DataFrame(votes_matrix, columns=["team_a", "team_b", "result_a", "result_b"])
+    table = Table(data_frame, col=["team_a", "team_b", "result_a", "result_b"])
     ranking = ranker.rank(table)
     delete(r for r in Result if r.poll.id == poll_id)
     for index, row in ranking.iterrows():
