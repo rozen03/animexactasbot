@@ -41,6 +41,10 @@ from handlers.ejemplo.votar import (
     votar_opciones,
     opcion_votada
 )
+from handlers.polls.listar import (
+    get_polls,
+    listar_polls
+)
 
 # Enable logging
 from usecases.misc.user import save_user_from_message, save_user_from_button
@@ -164,13 +168,7 @@ def main():
             run_async=True,
             pattern='^' + "get_ranking"
         )
-        dispatcher.add_handler(get_ranking_handler)
-        get_ranking_handler = ButtonCallbackQueryHandler(
-            get_ranking,
-            run_async=True,
-            pattern='^' + "get_ranking"
-        )
-        dispatcher.add_handler(get_ranking_handler)
+        dispatcher.add_handler(get_ranking_handler)        
 
         dispatcher.add_handler(CallbackQueryHandler(button_handler, run_async=True))
 
@@ -180,6 +178,16 @@ def main():
         dispatcher.add_handler(manual_rank_polls)
 
         dispatcher.add_handler(CommandHandler('ranking', get_ranking_polls, run_async=True))
+
+        list_polls_handler = ButtonCallbackQueryHandler(
+            listar_polls,
+            run_async=True,
+            pattern='^' + "listar_polls"
+        )
+        dispatcher.add_handler(list_polls_handler)
+
+        dispatcher.add_handler(CommandHandler('listar', get_polls, run_async=True))
+
         for hour in [9, 13, 17, 21]:
             updater.job_queue.run_daily(callback=job_send_votes,
                 time=datetime.time(hour=hour, minute=0, second=0,

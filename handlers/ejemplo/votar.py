@@ -114,8 +114,8 @@ def send_votation(context: CallbackContext, query, poll_id, poll_name):
 		logger.info("send_votation error", exp)
 		logger.info(context.job.context)
 		return
-	chat_id = context.job.context["chat_id"]
-	message = context.bot.send_message(text=f'Has elegido la encuesta de {poll_name}.\n\n'
+		chat_id = context.job.context["chat_id"]
+		message = context.bot.send_message(text=f'Has elegido la encuesta de {poll_name}.\n\n'
 												'¿Cuál de las siguientes opciones es la mejor?\n'
 												f'[{choices[0].text}]({choices[0].url})\n'
 												f'[{choices[1].text}]({choices[1].url})',
