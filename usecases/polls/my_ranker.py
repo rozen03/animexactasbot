@@ -20,15 +20,16 @@ class MyColleyRanker(Ranker.ColleyRanker):
         -------
         pandas.DataFrame, with column ['name', 'rating', 'rank']
         """
-        drawMargin = self.drawMargin
+        draw_margin = self.draw_margin
         data = table.table[['hidx', 'vidx', 'hscore', 'vscore', 'weight']]
 
         idx = data.iloc[:, :2]
         score = data.iloc[:, 2:]
-        C, b = fast_colley_build(np.require(idx, dtype=np.int32), np.require(score, dtype=np.float64),
-                                 table.itemnum, drawMargin)
+        coll, base = fast_colley_build(np.require(idx, dtype=np.int32),
+            np.require(score, dtype=np.float64),
+            table.itemnum, drawMargin)
 
-        rating = sp.linalg.solve(C, b)
+        rating = sp.linalg.solve(coll, base)
         self.rating = pd.DataFrame({
                 "iidx": np.arange(table.itemnum, dtype=np.int),
                 "rating": rating})

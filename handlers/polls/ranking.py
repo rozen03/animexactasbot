@@ -5,7 +5,7 @@ import logging
 from telegram import (Update)
 from telegram.ext import (CallbackContext)
 
-from handlers.ejemplo.votar import send_votation, send_random_votes
+from handlers.ejemplo.votar import send_random_votes
 from handlers.utils.utils import obtener_botonera_polls
 from usecases.misc.user import save_user_from_message
 from usecases.polls.ranking import get_rank
@@ -51,10 +51,10 @@ def job_send_votes(context: CallbackContext):
     logger.info("Voy a mandar voto")
     try:
         send_random_votes(context, "-1001244943487")
-    except Exception as e:
-        context.bot.sendMessage(137497264, text="Allgo falló mandando random votes")
-        context.bot.sendMessage(137497264, text=str(e))
+    except Exception as exp:
+        context.bot.sendMessage(137497264, text="Algo falló mandando random votes")
+        context.bot.sendMessage(137497264, text=str(exp))
         logger.error("iba a mandar mensaje y esto:")
-        logger.exception(e)
-        raise e
+        logger.exception(exp)
+        raise exp
     logger.info("mandé voto")

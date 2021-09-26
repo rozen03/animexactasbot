@@ -41,12 +41,17 @@ from handlers.ejemplo.votar import (
     votar_opciones,
     opcion_votada
 )
+from handlers.polls.listar import (
+    get_polls,
+    listar_polls
+)
 
 # Enable logging
 from usecases.misc.user import save_user_from_message, save_user_from_button
 
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO, filename="animexactasbot.log"
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO, filename="animexactasbot.log"
 )
 
 logger = logging.getLogger('animexactasbot.log')
@@ -93,8 +98,8 @@ def main():
         dispatcher = updater.dispatcher
         dispatcher.add_error_handler(error_callback)
         # TODO: create a different handler, i was really sleepy
-        dispatcher.add_handler(MessageHandler(filters=telegram.ext.Filters.all, callback=save_user_from_message),
-                               group=1)
+        dispatcher.add_handler(MessageHandler(filters=telegram.ext.Filters.all,
+                                              callback=save_user_from_message), group=1)
         dispatcher.add_handler(CallbackQueryHandler(save_user_from_button), group=1)
         # Commands
         start_handler = CommandHandler('start', start)
@@ -164,14 +169,13 @@ def main():
             pattern='^' + "get_ranking"
         )
         dispatcher.add_handler(get_ranking_handler)
-        get_ranking_handler = ButtonCallbackQueryHandler(
-            get_ranking,
-            run_async=True,
-            pattern='^' + "get_ranking"
-        )
-        dispatcher.add_handler(get_ranking_handler)
 
-        dispatcher.add_handler(CallbackQueryHandler(button_handler, run_async=True))
+        list_polls_handler = ButtonCallbackQueryHandler(
+            listar_polls,
+            run_async=True,
+            pattern='^' + "listar_polls"
+        )
+        dispatcher.add_handler(list_polls_handler)
 
         updater.job_queue.run_daily(callback=job_rank_polls, time=datetime.time())
 
@@ -179,12 +183,19 @@ def main():
         dispatcher.add_handler(manual_rank_polls)
 
         dispatcher.add_handler(CommandHandler('ranking', get_ranking_polls, run_async=True))
+
+        dispatcher.add_handler(CommandHandler('listar', get_polls, run_async=True))
+
         for hour in [9, 13, 17, 21]:
-            updater.job_queue.run_daily(callback=job_send_votes, time=datetime.time(hour=hour, minute=0, second=0,
-                                                                                    tzinfo=pytz.timezone(
-                                                                                        'America/Argentina/Buenos_Aires')))
+            updater.job_queue.run_daily(callback=job_send_votes,
+                                        time=datetime.time(hour=hour, minute=0, second=0,
+                                                           tzinfo=pytz.timezone(
+                                                               'America/Argentina/Buenos_Aires')))
         dispatcher.bot.set_my_commands(get_command_list())
         # Start running the bot
+
+        # Este es el handler default de botones, si llega acá es que algo salió mal
+        dispatcher.add_handler(CallbackQueryHandler(button_handler, run_async=True))
         updater.start_polling()
     except Exception as inst:
         logger.critical("ERROR AL INICIAR EL ANIMEXACTASBOT")

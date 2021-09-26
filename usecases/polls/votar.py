@@ -22,8 +22,8 @@ def create_vote(id_a, id_b, id_selected, user_id):
     option_a = Option[int(id_a)]
     option_b = Option[int(id_b)]
     with votes_mutex:
-        vote = select(v for v in Vote if v.user == user and v.option_a == option_a and v.option_b == option_b).limit(1)[
-               :]
+        vote = select(v for v in Vote if v.user == user and
+            v.option_a == option_a and v.option_b == option_b).limit(1)[:]
         if len(vote) > 0:
             return "", False
         Vote(option_a=Option[int(id_a)],
