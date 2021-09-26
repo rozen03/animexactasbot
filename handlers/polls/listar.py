@@ -3,15 +3,16 @@
 import logging
 
 import telegram
+from pony.orm import set_sql_debug
 from telegram import (Update)
 from telegram.ext import (CallbackContext)
 
 from handlers.utils.utils import obtener_botonera_polls
 from usecases.misc.user import save_user_from_message
-
-from models import Option, db_session, select
+from usecases.polls.listar import list_poll_options
 
 logger = logging.getLogger('animexactasbot.log')
+
 
 def get_polls(update: Update, context: CallbackContext):
     save_user_from_message(update, context)
@@ -30,9 +31,7 @@ def listar_polls(update: Update, context: CallbackContext) -> None:
 
     poll_name = callback_args[1]
     poll_id = callback_args[2]
-
     opt_list = list_poll_options(poll_id)
-    opt_list.sort()
 
     try:
         query.edit_message_text(text=f'Elegiste el poll de {poll_name}.\n\n')
@@ -40,18 +39,15 @@ def listar_polls(update: Update, context: CallbackContext) -> None:
         for (name, url) in opt_list:
             if len(txt_msg + f'[{name}]({url})\n') > 4096:
                 query.edit_message_text(txt_msg,
-                    disable_web_page_preview=True,
-                    parse_mode=telegram.ParseMode.MARKDOWN)
+                                        disable_web_page_preview=True,
+                                        parse_mode=telegram.ParseMode.MARKDOWN)
                 txt_msg = ""
             txt_msg = txt_msg + f'[{name}]({url})\n'
 
         query.edit_message_text(txt_msg[:-1],
-            disable_web_page_preview=True,
-            parse_mode=telegram.ParseMode.MARKDOWN)
+                                disable_web_page_preview=True,
+                                parse_mode=telegram.ParseMode.MARKDOWN)
     finally:
         pass
 
-@db_session
-def list_poll_options(poll_id):
-    option_list = select((o.text,o.url) for o in Option if o.poll.id == poll_id)[:]
-    return option_list
+
