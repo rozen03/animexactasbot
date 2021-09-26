@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
+import telegram
 from telegram import (Update)
 from telegram.ext import (CallbackContext)
 
@@ -15,6 +16,7 @@ logger = logging.getLogger('animexactasbot.log')
 def get_polls(update: Update, context: CallbackContext):
     save_user_from_message(update, context)
     reply_markup = obtener_botonera_polls("listar_polls")
+    print(reply_markup)
     update.message.reply_text(
         "¿Poll a listar?",
         reply_markup=reply_markup,
@@ -37,13 +39,13 @@ def listar_polls(update: Update, context: CallbackContext) -> None:
         txt_msg = ""
         for (name, url) in opt_list:
             if len(txt_msg + f'[{name}]({url})\n') > 4096:
-                update.message.reply_text(txt_msg,
+                query.edit_message_text(txt_msg,
                     disable_web_page_preview=True,
                     parse_mode=telegram.ParseMode.MARKDOWN)
                 txt_msg = ""
             txt_msg = txt_msg + f'[{name}]({url})\n'
 
-        update.message.reply_text(txt_msg[:-1],
+        query.edit_message_text(txt_msg[:-1],
             disable_web_page_preview=True,
             parse_mode=telegram.ParseMode.MARKDOWN)
     finally:

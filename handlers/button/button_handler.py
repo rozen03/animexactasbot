@@ -30,15 +30,8 @@ Every Button comes with callback_data, let's have a common ground of how to deal
 
 
 def button_handler(update: Update, context: CallbackContext) -> None:
-    query = update.callback_query
-    callback_arguments = query.data.split("|")
-    if callback_arguments[0] == "dame_botones":
-        coso = callback_arguments[1]
-        query.message.reply_text(f"apretaste algún botón y ahora se que sos un {coso}")
-        try:
-            query.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup([]))
-        finally:
-            pass
+    print("got a button that i don't know how the hell to handle :)")
+    print(update.callback_query)
 
 
 def te_doy_botones(update: Update, context: CallbackContext) -> None:
