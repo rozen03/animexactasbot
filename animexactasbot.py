@@ -45,6 +45,14 @@ from handlers.polls.listar import (
     get_polls,
     listar_polls
 )
+from handlers.polls.edit_option import (
+    O_ID, O_EDIT,
+    get_edit_polls,
+    get_option,
+    field_to_edit,
+    edit_opt_field,
+    opt_new_value
+)
 
 # Enable logging
 from usecases.misc.user import save_user_from_message, save_user_from_button
@@ -125,6 +133,7 @@ def main():
         )
 
         dispatcher.add_handler(sugerir_opcion_handler)
+
         polls_reply_handler = CallbackQueryHandler(
             polls_reply,
             run_async=True,
@@ -176,6 +185,30 @@ def main():
             pattern='^' + "listar_polls"
         )
         dispatcher.add_handler(list_polls_handler)
+
+        edit_opcion_handler = ConversationHandler(
+            entry_points=[CommandHandler('editopt', get_edit_polls)],
+            states={
+                O_ID: [MessageHandler(Filters.text & ~Filters.command, field_to_edit)],
+                O_EDIT: [MessageHandler(Filters.text & ~Filters.command, opt_new_value)]
+            },
+            fallbacks=[CommandHandler('cancelar', cancelar)]
+        )
+        dispatcher.add_handler(edit_opcion_handler)
+
+        get_option_handler = ButtonCallbackQueryHandler(
+            get_option,
+            run_async=True,
+            pattern='^' + "get_option"
+        )
+        dispatcher.add_handler(get_option_handler)
+
+        edit_option_field_handler = ButtonCallbackQueryHandler(
+            edit_opt_field,
+            run_async=True,
+            pattern='^' + "edit_opt_field"
+        )
+        dispatcher.add_handler(edit_option_field_handler)
 
         updater.job_queue.run_daily(callback=job_rank_polls, time=datetime.time())
 
