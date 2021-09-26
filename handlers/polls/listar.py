@@ -25,7 +25,6 @@ def get_polls(update: Update, context: CallbackContext):
 
 
 def listar_polls(update: Update, context: CallbackContext) -> None:
-    print("listing")
     query = update.callback_query
     callback_args = query.data.split("|")
 
@@ -36,15 +35,18 @@ def listar_polls(update: Update, context: CallbackContext) -> None:
     try:
         query.edit_message_text(text=f'Elegiste el poll de {poll_name}.\n\n')
         txt_msg = ""
+        hyperlink_ctr = 0
         for (name, url) in opt_list:
-            if len(txt_msg + f'[{name}]({url})\n') > 4096:
-                query.edit_message_text(txt_msg,
+            if len(txt_msg + f'[{name}]({url})\n') > 4096 or hyperlink_ctr == 100:
+                query.from_user.send_message(txt_msg,
                                         disable_web_page_preview=True,
                                         parse_mode=telegram.ParseMode.MARKDOWN)
                 txt_msg = ""
+                hyperlink_ctr = 0
             txt_msg = txt_msg + f'[{name}]({url})\n'
+            hyperlink_ctr+=1
 
-        query.edit_message_text(txt_msg[:-1],
+        query.from_user.send_message(txt_msg[:-1],
                                 disable_web_page_preview=True,
                                 parse_mode=telegram.ParseMode.MARKDOWN)
     finally:
