@@ -45,6 +45,7 @@ from handlers.polls.listar import (
     get_polls,
     listar_polls
 )
+
 from handlers.polls.edit_option import (
     O_ID, O_EDIT,
     get_edit_polls,
@@ -53,6 +54,7 @@ from handlers.polls.edit_option import (
     edit_opt_field,
     opt_new_value
 )
+
 
 # Enable logging
 from usecases.misc.user import save_user_from_message, save_user_from_button
@@ -209,6 +211,7 @@ def main():
             pattern='^' + "edit_opt_field"
         )
         dispatcher.add_handler(edit_option_field_handler)
+
 
         updater.job_queue.run_daily(callback=job_rank_polls, time=datetime.time())
 

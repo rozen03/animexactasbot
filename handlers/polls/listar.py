@@ -38,12 +38,15 @@ def listar_polls(update: Update, context: CallbackContext) -> None:
         hyperlink_ctr = 0
         for (name, url, oid) in opt_list:
             if len(txt_msg + f'{oid}. [{name}]({url})\n') > 4096 or hyperlink_ctr == 100:
+
                 query.from_user.send_message(txt_msg,
                                         disable_web_page_preview=True,
                                         parse_mode=telegram.ParseMode.MARKDOWN)
                 txt_msg = ""
                 hyperlink_ctr = 0
+
             txt_msg = txt_msg + f'{oid}. [{name}]({url})\n'
+
             hyperlink_ctr+=1
 
         query.from_user.send_message(txt_msg[:-1],
