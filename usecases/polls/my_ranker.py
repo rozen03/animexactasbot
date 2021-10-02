@@ -20,7 +20,7 @@ class MyColleyRanker(Ranker.ColleyRanker):
         -------
         pandas.DataFrame, with column ['name', 'rating', 'rank']
         """
-        draw_margin = self.draw_margin
+        drawMargin = self.drawMargin
         data = table.table[['hidx', 'vidx', 'hscore', 'vscore', 'weight']]
 
         idx = data.iloc[:, :2]
