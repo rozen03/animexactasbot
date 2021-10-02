@@ -38,10 +38,18 @@ def get_ranking(update: Update, context: CallbackContext) -> None:
     poll_id = callback_args[2]
 
     ranks = get_rank(poll_id)
-    ranks_text = str.join("\n", [f"{k + 1}.{name}" for k, name in enumerate(ranks)])
 
     try:
-        query.edit_message_text(text=f'Elegiste el poll de {poll_name}.\n\n' + ranks_text)
+        query.edit_message_text(text=f'Elegiste el poll de {poll_name}.\n\n')
+        txt_msg = ""
+        for k, name in enumerate(ranks):
+            if len(txt_msg + f'{k + 1}. {name}\n') > 4096:
+                query.from_user.send_message(txt_msg)
+                txt_msg = ""
+
+            txt_msg = txt_msg + f'{k + 1}. {name}\n'
+
+        query.from_user.send_message(txt_msg[:-1])
     finally:
         pass
 
